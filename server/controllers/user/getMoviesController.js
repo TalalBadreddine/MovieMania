@@ -24,8 +24,6 @@ const getAllMovies = async (req, res) => {
             dataBaseIsEmpty = response
         })
 
-        console.log(dataBaseIsEmpty)
-
         if(!extensions.sessionHaveMovies()  && dataBaseIsEmpty ){
            
             let listOfAllMoviesDetails = []
