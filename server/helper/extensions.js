@@ -1,6 +1,10 @@
 const session = require('express-session')
+const userSchema = require('../models/userSchema.js')
 const axios = require('axios')
 const dotenv = require('dotenv')
+const crypto = require('crypto');
+const hashType = 'sha1'
+const encodeAs = 'hex'
 
 dotenv.config({path: __dirname + '/../.env'})
 
@@ -11,19 +15,21 @@ const {
 } = process.env
 
 
-async function dbIsEmpty(SchemaName){
+// <-------- String -------->
 
+
+async function hashString(str){
     try{
-        const results = await SchemaName.find().count()
-        return results == 0
+        const hash = await crypto.createHash(hashType).update(str).digest(encodeAs);
+        return hash
     }
     catch(err){
-
         console.log(err.message)
     }
-
-    return 1
 }
+
+
+// <-------- Session -------->
 
 
 function sessionHaveMovies(){
@@ -38,6 +44,9 @@ function sessionHaveMovies(){
 }
 
 
+// <-------- API -------->
+
+
 async function getAllMoviesId(){
     let moviesId = []
 
@@ -48,21 +57,17 @@ async function getAllMoviesId(){
                 headers: {
                     'X-RapidAPI-Key': 'b430c9dc9cmsh98401db1637b694p116976jsnfaeb2c0dc52d',
                     'X-RapidAPI-Host': 'movies-app1.p.rapidapi.com' 
-                }
-        }
-        
-    
+                }   
+         }
         await axios.request(getAllMovies).then(function (response){
             let data = response.data['results']
     
             for(let i = 0 ; i < data.length ; i++){
                 moviesId.push(data[i]['id'])
-            }        
+            }
         })    
     }
-
     return moviesId
-
 }
 
 
@@ -87,13 +92,21 @@ async function getMovieDetailById(id){
 }
 
 
-async function getAllDetailsFromDb(modelName){
+// <-------- DataBase -------->
+
+
+async function getBundleForUserById(userId){
     try{
-        const results = await modelName.find()
-        return results
+        const results = userSchema.find({
+            _id: userId
+        },{
+            bundlesId: 1
+        })
+
+        return results[results.length - 1]
     }
-    catch(err){
-        console.log(err.message)
+    catch(error){
+        console.log(error.message)
     }
 }
 
@@ -109,8 +122,29 @@ async function addToDb(modelName, modelInfo){
 }
 
 
-function cleanUp(element){
-    return element
+async function getAllDetailsFromDb(modelName){
+    try{
+        const results = await modelName.find()
+        return results
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
+async function dbIsEmpty(SchemaName){
+
+    try{
+        const results = await SchemaName.find().count()
+        return results == 0
+    }
+    catch(err){
+
+        console.log(err.message)
+    }
+
+    return 1
 }
 
 
@@ -121,5 +155,6 @@ module.exports = {
     getMovieDetailById,
     addToDb,
     getAllDetailsFromDb,
-    cleanUp
+    getBundleForUserById,
+    hashString   
 }
