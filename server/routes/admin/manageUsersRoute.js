@@ -4,7 +4,8 @@ const {
     addUser,
     updateUser,
     deleteUser
-} = require('../controllers/usersController.js')
+} = require('../../controllers/admin/manageUsersController.js')
+
 const Router = require('express').Router;
  
 // initialize express router

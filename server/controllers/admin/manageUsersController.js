@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const user = require('../models/userSchema.js')
+const user = require('../../models/userSchema.js')
 
 // GET request for a list of all users
 const getUsers = async (req, res) => {
@@ -16,7 +16,7 @@ const getUsers = async (req, res) => {
 
 // GET request for one user (specified by its ID)
 const getUser = async (req, res) => {
-
+    
     try {
         const id = req.params.id;
         const filters = {
@@ -45,7 +45,7 @@ const addUser = async (req, res) => {
             res.status(409).json({ message: "failed to add user" });
         }
     } catch (error) {
-        res.status(500).json({ message: "internal error" });
+        res.status(500).json({ message: `internal error : ${error.message}` });
     }
 
 }
