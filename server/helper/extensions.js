@@ -15,6 +15,34 @@ const {
 } = process.env
 
 
+// <-------- JWT -------->
+
+
+function verifyTokenForUser(req, res, next) {
+    
+    const bearerHeader = req.headers['authorization'];
+ 
+    if(typeof bearerHeader !== 'undefined') {
+
+      const bearer = bearerHeader.split(' ');
+
+      const bearerToken = bearer[1];
+
+      req.token = bearerToken;
+
+     
+      jwt.verify(req.token, jwtSecret, (err, authData) => {
+        let role = authData['role']
+        role == 'user' ? next() : res.end()
+      })
+
+    } else {
+
+      res.sendStatus(403);
+    }  
+}
+ 
+
 // <-------- String -------->
 
 
@@ -171,5 +199,5 @@ module.exports = {
     getAllDetailsFromDb,
     getBundleForUserById,
     userAlreadyExist,
-    hashString   
+    hashString  
 }
