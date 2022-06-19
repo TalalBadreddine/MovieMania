@@ -18,9 +18,9 @@ const {
 // <-------- String -------->
 
 
-async function hashString(str){
+function hashString(str){
     try{
-        const hash = await crypto.createHash(hashType).update(str).digest(encodeAs);
+        const hash = crypto.createHash(hashType).update(str).digest(encodeAs);
         return hash
     }
     catch(err){
@@ -95,6 +95,20 @@ async function getMovieDetailById(id){
 // <-------- DataBase -------->
 
 
+async function userAlreadyExist(email){
+    try{
+        const results = await userSchema.find({
+            email: email
+        }).count()
+        
+        return results != 0 
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
 async function getBundleForUserById(userId){
     try{
         const results = userSchema.find({
@@ -156,5 +170,6 @@ module.exports = {
     addToDb,
     getAllDetailsFromDb,
     getBundleForUserById,
+    userAlreadyExist,
     hashString   
 }

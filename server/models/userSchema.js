@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
     },
     registrationDate: {
         type: Date,
-        default: Date.now()
+        default: new Date().toISOString().split('T')[0]
     },
     email: {
         type: String,

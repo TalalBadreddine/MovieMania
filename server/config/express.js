@@ -4,8 +4,9 @@ const mongoose = require('mongoose')
 const session = require('express-session')
 const app = express()
 const userRegisterRouter = require('../routes/user/register.js')
-const getMoviesRouter = require('../routes/user/geMoviesRouter.js')
+const getMoviesRouter = require('../routes/user/getMoviesRouter.js')
 const manageUsersRouter = require('../routes/admin/manageUsersRoute.js');
+const  loginRouter = require('../routes/loginRoute.js')
 
 dotenv.config({path: __dirname + '/../../.env'})
 
@@ -38,6 +39,8 @@ async function startServer(){
         }))
 
         // Insert Routest here
+
+        app.use('/login', loginRouter)
 
         app.use('/register', userRegisterRouter)
 
