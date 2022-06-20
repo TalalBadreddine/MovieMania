@@ -3,6 +3,8 @@ const userSchema = require('../models/userSchema.js')
 const axios = require('axios')
 const dotenv = require('dotenv')
 const crypto = require('crypto');
+const nodemailer = require('nodemailer')
+const nexmo = require('nexmo')
 const hashType = 'sha1'
 const encodeAs = 'hex'
 
@@ -11,16 +13,46 @@ dotenv.config({path: __dirname + '/../.env'})
 const {
     backdropPath,
     movieApi,
-    apiKey
+    apiKey,
+    accountEmail,
+    emailPassword
 } = process.env
 
+
+// <-------- JWT -------->
+
+
+// function verifyTokenForUser(req, res, next) {
+    
+//     const bearerHeader = req.headers['authorization'];
+    
+//     if(typeof bearerHeader !== 'undefined') {
+
+//       const bearer = bearerHeader.split(' ');
+
+//       const bearerToken = bearer[1];
+
+//       req.token = bearerToken;
+     
+//       jwt.verify(req.token, jwtSecret, (err, authData) => {
+//         let role = authData['role']
+//         role == 'user' ? next() : res.end()
+//       })
+
+//     } else {
+
+//       res.sendStatus(403);
+//     }  
+// }
+
+ 
 
 // <-------- String -------->
 
 
-async function hashString(str){
+function hashString(str){
     try{
-        const hash = await crypto.createHash(hashType).update(str).digest(encodeAs);
+        const hash = crypto.createHash(hashType).update(str).digest(encodeAs);
         return hash
     }
     catch(err){
@@ -95,6 +127,20 @@ async function getMovieDetailById(id){
 // <-------- DataBase -------->
 
 
+async function userAlreadyExist(email){
+    try{
+        const results = await userSchema.find({
+            email: email
+        }).count()
+        
+        return results != 0 
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
 async function getBundleForUserById(userId){
     try{
         const results = userSchema.find({
@@ -156,5 +202,6 @@ module.exports = {
     addToDb,
     getAllDetailsFromDb,
     getBundleForUserById,
-    hashString   
+    userAlreadyExist,
+    hashString  
 }

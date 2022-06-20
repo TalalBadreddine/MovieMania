@@ -2,10 +2,15 @@ const express = require('express')
 const dotenv = require('dotenv')
 const mongoose = require('mongoose')
 const session = require('express-session')
+const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser');
+const extensions = require('../helper/extensions.js')
 const app = express()
 const userRegisterRouter = require('../routes/user/register.js')
-const getMoviesRouter = require('../routes/user/geMoviesRouter.js')
+const getMoviesRouter = require('../routes/user/getMoviesRouter.js')
 const manageUsersRouter = require('../routes/admin/manageUsersRoute.js');
+const  loginRouter = require('../routes/loginRoute.js')
+const {validateUser,validateAdmin } = require('../middleware/authMiddleware.js')
 
 dotenv.config({path: __dirname + '/../../.env'})
 
@@ -14,7 +19,8 @@ const {
     dbHost,
     dbName,
     serverPort,
-    sessionSecret
+    sessionSecret,
+    jwtSecret
 } = process.env
 
 async function connectDB(){
@@ -28,7 +34,9 @@ async function startServer(){
         await connectDB()
 
         const app = express()
-        
+
+        app.use(cookieParser())
+
         app.use(express.json())
 
         app.use(session({
@@ -39,11 +47,13 @@ async function startServer(){
 
         // Insert Routest here
 
+        app.use('/login', loginRouter)
+
         app.use('/register', userRegisterRouter)
 
-        app.use('/user/Movies', getMoviesRouter)
+        app.use('/user/Movies', validateUser, getMoviesRouter)
 
-        app.use('/admin/manageUsers', manageUsersRouter)
+        app.use('/admin/manageUsers', validateAdmin, manageUsersRouter)
 
         app.listen(serverPort, () => console.log(`Listening to port ${serverPort}`))
 
@@ -52,4 +62,6 @@ async function startServer(){
         console.log(`Error at server connection with Db : ${error.message}`)
     }
 }
+
+
 startServer()
