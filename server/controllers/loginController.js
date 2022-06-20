@@ -12,6 +12,7 @@ const {
     jwtSecret
 } = process.env
 
+
 const loginFunc = async (req, res, next) => {
     
     const user = {
@@ -22,7 +23,8 @@ const loginFunc = async (req, res, next) => {
     if(user.email == adminUserName && user.password == extentions.hashString(adminPassword)){
 
         jwt.sign({user: user, role: 'admin'}, jwtSecret, (err, token) => {
-            res.send(token)
+            res.cookie('jwt', token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 })
+            res.status(201).json(token)
         })
        
     }else{
@@ -32,18 +34,19 @@ const loginFunc = async (req, res, next) => {
         password: user.password
     })
 
-    session.currentUserInfo = results
     
     if(results.length == 1){
+        session.currentUserInfo = results
 
         jwt.sign({user: user, role: 'user'}, jwtSecret, (err, token) => {
-            res.send(token)
+            res.cookie('jwt', token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 })
+            res.status(201).json(token)
         })
+        
 
     }else{
         res.status(404).send("User Not Found Please try again later")
-    }
-    
+    }  
 }}
 
 module.exports = {

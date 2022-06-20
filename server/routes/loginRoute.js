@@ -1,7 +1,8 @@
 const router = require('express').Router
 const loginRouter = router()
 const {
-    loginFunc
+    loginFunc,
+    forgetPassword
 } = require('../controllers/loginController.js')
 
 loginRouter.post('/', loginFunc)

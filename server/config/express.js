@@ -3,11 +3,14 @@ const dotenv = require('dotenv')
 const mongoose = require('mongoose')
 const session = require('express-session')
 const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser');
+const extensions = require('../helper/extensions.js')
 const app = express()
 const userRegisterRouter = require('../routes/user/register.js')
 const getMoviesRouter = require('../routes/user/getMoviesRouter.js')
 const manageUsersRouter = require('../routes/admin/manageUsersRoute.js');
 const  loginRouter = require('../routes/loginRoute.js')
+const {validateUser,validateAdmin } = require('../middleware/authMiddleware.js')
 
 dotenv.config({path: __dirname + '/../../.env'})
 
@@ -31,7 +34,9 @@ async function startServer(){
         await connectDB()
 
         const app = express()
-        
+
+        app.use(cookieParser())
+
         app.use(express.json())
 
         app.use(session({
@@ -46,9 +51,9 @@ async function startServer(){
 
         app.use('/register', userRegisterRouter)
 
-        app.use('/user/Movies', verifyTokenForUser, getMoviesRouter)
+        app.use('/user/Movies', validateUser, getMoviesRouter)
 
-        app.use('/admin/manageUsers', verifyTokenForAdmin, manageUsersRouter)
+        app.use('/admin/manageUsers', validateAdmin, manageUsersRouter)
 
         app.listen(serverPort, () => console.log(`Listening to port ${serverPort}`))
 
@@ -56,56 +61,6 @@ async function startServer(){
        
         console.log(`Error at server connection with Db : ${error.message}`)
     }
-}
-
-
-function verifyTokenForUser(req, res, next) {
-    
-    const bearerHeader = req.headers['authorization'];
- 
-    if(typeof bearerHeader !== 'undefined') {
-
-      const bearer = bearerHeader.split(' ');
-
-      const bearerToken = bearer[1];
-
-      req.token = bearerToken;
-
-     
-      jwt.verify(req.token, jwtSecret, (err, authData) => {
-        let role = authData['role']
-        role == 'user' ? next() : res.sendStatus(403)
-      })
-
-    } else {
-
-      res.sendStatus(403);
-    }  
-}
-
-
-function verifyTokenForAdmin(req, res, next) {
-    
-    const bearerHeader = req.headers['authorization'];
- 
-    if(typeof bearerHeader !== 'undefined') {
-
-      const bearer = bearerHeader.split(' ');
-
-      const bearerToken = bearer[1];
-
-      req.token = bearerToken;
-    
-     
-      jwt.verify(req.token, jwtSecret, (err, authData) => {
-        let role = authData['role']
-        role == 'admin' ? next() : res.sendStatus(403)
-      })
-
-    } else {
-
-      res.sendStatus(403);
-    }  
 }
 
 
