@@ -27,12 +27,15 @@ async function startServer(){
         app.use(express.json())
 
         // Insert Routest here
+        
+        const bundleRouter = require('../routes/bundleRoute')
+        app.use('/admin/bundle', bundleRouter)
 
         app.listen(serverPort, () => console.log(`Listening to port ${serverPort}`))
 
     }catch(error){
        
-        console.log(`Error at server connection with Db : ${error.message}`)
+        console.log(`Error server connection with Db : ${error.message}`)
     }
 }
 startServer()
