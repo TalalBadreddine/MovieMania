@@ -1,4 +1,6 @@
+//import packages library
 const express = require('express')
+const moviesRouter = require('../routes/adminRoute/movieRoute.js');
 const dotenv = require('dotenv')
 const mongoose = require('mongoose')
 const session = require('express-session')
@@ -11,6 +13,7 @@ const getMoviesRouter = require('../routes/user/getMoviesRouter.js')
 const manageUsersRouter = require('../routes/admin/manageUsersRoute.js');
 const  loginRouter = require('../routes/loginRoute.js')
 const {validateUser,validateAdmin } = require('../middleware/authMiddleware.js')
+
 
 dotenv.config({path: __dirname + '/../../.env'})
 
@@ -33,6 +36,7 @@ async function startServer(){
     try{
         await connectDB()
 
+        // intialize express app
         const app = express()
 
         app.use(cookieParser())
@@ -46,6 +50,8 @@ async function startServer(){
         }))
 
         // Insert Routest here
+         // initialize routes
+         app.use('/admin/movies', moviesRouter); 
 
         app.use('/login', loginRouter)
 
@@ -62,6 +68,5 @@ async function startServer(){
         console.log(`Error at server connection with Db : ${error.message}`)
     }
 }
-
 
 startServer()
