@@ -3,9 +3,17 @@ const express = require('express')
 const moviesRouter = require('../routes/adminRoute/movieRoute.js');
 const dotenv = require('dotenv')
 const mongoose = require('mongoose')
+const session = require('express-session')
+const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser');
+const extensions = require('../helper/extensions.js')
+const app = express()
+const userRegisterRouter = require('../routes/user/register.js')
+const getMoviesRouter = require('../routes/user/getMoviesRouter.js')
+const manageUsersRouter = require('../routes/admin/manageUsersRoute.js');
+const  loginRouter = require('../routes/loginRoute.js')
+const {validateUser,validateAdmin } = require('../middleware/authMiddleware.js')
 
-
- const app = express()
 
 dotenv.config({path: __dirname + '/../../.env'})
 
@@ -13,11 +21,12 @@ const {
     dbPort,
     dbHost,
     dbName,
-    serverPort
+    serverPort,
+    sessionSecret,
+    jwtSecret
 } = process.env
 
 async function connectDB(){
-    // mongodb://localhost:27017/MovieMania
     const uri = `mongodb://${dbHost}:${dbPort}/${dbName}`
     await mongoose.connect(uri)
     console.log("Connected to db!")
@@ -30,13 +39,28 @@ async function startServer(){
         // intialize express app
         const app = express()
 
+        app.use(cookieParser())
+
         app.use(express.json())
+
+        app.use(session({
+            secret: sessionSecret,
+            resave: false,
+            saveUninitialized: false
+        }))
 
         // Insert Routest here
          // initialize routes
          app.use('/admin/movies', moviesRouter); 
 
-         // start listening for requests
+        app.use('/login', loginRouter)
+
+        app.use('/register', userRegisterRouter)
+
+        app.use('/user/Movies', validateUser, getMoviesRouter)
+
+        app.use('/admin/manageUsers', validateAdmin, manageUsersRouter)
+
         app.listen(serverPort, () => console.log(`Listening to port ${serverPort}`))
 
     }catch(error){
@@ -44,6 +68,5 @@ async function startServer(){
         console.log(`Error at server connection with Db : ${error.message}`)
     }
 }
+
 startServer()
-
-
