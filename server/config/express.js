@@ -28,8 +28,8 @@ async function startServer(){
 
         // Insert Routest here
         
-        const bundleRouter = require('../routes/bundleRoute')
-        app.use('/admin/bundle', bundleRouter)
+         const bundleRouter = require('../routes/bundleRoute')
+         app.use('/admin/bundle', bundleRouter)
 
         app.listen(serverPort, () => console.log(`Listening to port ${serverPort}`))
 
