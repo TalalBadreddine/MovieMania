@@ -7,6 +7,7 @@ const session = require('express-session')
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser');
 const extensions = require('../helper/extensions.js')
+const path = require('path')
 const bundleRouter = require('../routes/bundleRoute')
 const app = express()
 const userRegisterRouter = require('../routes/user/register.js')
@@ -44,6 +45,10 @@ async function startServer(){
 
         app.use(express.json())
 
+        app.set('views', path.join(__dirname, '/../views/'))
+
+        app.set('view engine', 'ejs')
+
         app.use(session({
             secret: sessionSecret,
             resave: false,
@@ -52,6 +57,18 @@ async function startServer(){
 
         // Insert Routest here
 
+        app.get('/success', (req, res) => {
+
+            // if(session.currentBundle){
+
+            // }
+            
+            res.render('success.ejs')
+        })
+
+        app.get('/cancel', (req, res) => {
+            res.render('cancel.ejs')
+        })
         
          app.use('/admin/bundle', bundleRouter)
       

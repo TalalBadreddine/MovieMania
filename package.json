@@ -10,16 +10,29 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.27.2",
+    "buffer": "^6.0.3",
     "cookie-parser": "^1.4.6",
     "crypto": "^1.0.1",
     "dotenv": "^16.0.1",
+    "ejs": "^3.1.8",
     "express": "^4.18.1",
     "mongodb": "^4.7.0",
     "express-session": "^1.17.3",
+    "http": "^0.0.1-security",
+    "https": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.8",
+    "net": "^1.0.2",
     "nexmo": "^2.9.1",
+    "node-fetch": "^3.2.6",
     "nodemailer": "^6.7.5",
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.16",
+    "path": "^0.12.7",
+    "stream": "^0.0.2",
+    "strip": "^3.0.0",
+    "stripe": "^9.9.0",
+    "url": "^0.11.0",
+    "util": "^0.12.4",
+    "zlib": "^1.0.5"
   }
 }

@@ -3,9 +3,11 @@ const dotenv = require('dotenv')
 
 dotenv.config({path:'../../.env'})
 
+
 const {
     jwtSecret
 } = process.env
+
 
 const validateUser = (req, res, next) => {
     const token = req.cookies.jwt
@@ -20,7 +22,7 @@ const validateUser = (req, res, next) => {
             }else{
                 
                 let role = decodedToken['role']
-                role == "user" ? next() : res.status(401)
+                role == "user" ? next() : res.send('cannot go in')
 
             }
         })
@@ -29,6 +31,7 @@ const validateUser = (req, res, next) => {
         res.redirect('/login')
     }
 }
+
 
 const validateAdmin = (req, res, next) => {
     const token = req.cookies.jwt
@@ -53,7 +56,6 @@ const validateAdmin = (req, res, next) => {
     }
 }
 
-// const validateAdmin = (req, res, next)
 
 module.exports = {
     validateUser,
