@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const bundleSchema = require('../models/bundleSchema');
-const bundle = require('../models/bundleSchema')
+const bundleSchema = require('../../models/bundleSchema');
+const bundle = require('../../models/bundleSchema')
 
 
 const getBundles = async (req, res) => { 

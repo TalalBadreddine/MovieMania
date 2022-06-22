@@ -4,11 +4,11 @@ const {
     addBundle,
     updateBundle,
     deleteBundle
-} = require('../controllers/bundleController')
+} = require('../../controllers/admin/manageBundlesController')
 
 
 const express = require('express')
-const bundle = require('../models/bundleSchema')
+const bundle = require('../../models/bundleSchema')
 
 // initiallizing express
 const router = express.Router()
