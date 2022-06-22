@@ -7,6 +7,7 @@ const session = require('express-session')
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser');
 const extensions = require('../helper/extensions.js')
+const bundleRouter = require('../routes/bundleRoute')
 const app = express()
 const userRegisterRouter = require('../routes/user/register.js')
 const getMoviesRouter = require('../routes/user/getMoviesRouter.js')
@@ -50,6 +51,10 @@ async function startServer(){
         }))
 
         // Insert Routest here
+
+        
+         app.use('/admin/bundle', bundleRouter)
+      
          // initialize routes
          app.use('/admin/movies', moviesRouter); 
 
@@ -65,7 +70,7 @@ async function startServer(){
 
     }catch(error){
        
-        console.log(`Error at server connection with Db : ${error.message}`)
+        console.log(`Error server connection with Db : ${error.message}`)
     }
 }
 
