@@ -5,6 +5,7 @@ const session = require('express-session')
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser');
 const extensions = require('../helper/extensions.js')
+const path = require('path')
 const app = express()
 const userRegisterRouter = require('../routes/user/register.js')
 const getMoviesRouter = require('../routes/user/getMoviesRouter.js')
@@ -39,6 +40,10 @@ async function startServer(){
 
         app.use(express.json())
 
+        app.set('views', path.join(__dirname, '/../views/'))
+
+        app.set('view engine', 'ejs')
+
         app.use(session({
             secret: sessionSecret,
             resave: false,
@@ -46,6 +51,14 @@ async function startServer(){
         }))
 
         // Insert Routest here
+
+        app.get('/success', (req, res) => {
+            res.render('success.ejs')
+        })
+
+        app.get('/cancel', (req, res) => {
+            res.render('cancel.ejs')
+        })
 
         app.use('/login', loginRouter)
 
