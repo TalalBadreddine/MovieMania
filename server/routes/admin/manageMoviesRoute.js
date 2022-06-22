@@ -4,7 +4,7 @@ const {
     addMovie,
     updateMovie,
     deleteMovie
-} = require('../../controllers/adminController/movieController.js')
+} = require('../../controllers/admin/manageMoviesController.js')
 const Router = require('express').Router;
  
 // initialize express router
@@ -15,8 +15,6 @@ moviesRouter.get('/:id', getMovie);
 
 // GET request for a list of all movies
 moviesRouter.get('/', getMovies);
-
-
 
 // POST request to add a movie
 moviesRouter.post('/add', addMovie);
