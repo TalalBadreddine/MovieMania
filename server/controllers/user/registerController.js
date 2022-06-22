@@ -34,7 +34,7 @@ const getUserInfo = async (req, res, next) => {
         }else{
               
               await extensions.addToDb(userSchema, user)
-              return res.redirect('/login')
+              return res.redirect('/payments')
         }
     })
 }
@@ -44,9 +44,7 @@ const payments = (req, res, next) => {
  let userInfo = session.currentUserInfo
 
     if(userInfo == undefined){
-      console.log("get out")
-      res.redirect('/login')
-      return
+      return res.status(403).redirect('not allowed')
     }
 
     let testBundle = [ 
@@ -81,7 +79,9 @@ const makePayment = async (req, res) => {
           success_url: 'http://localhost:3000/success',
           cancel_url: 'http://localhost:3000/cancel',
         })
-  
+        
+        session.currentBundle = req.body.items.bundleName
+
         res.json({ url: session.url})
         
       } catch (e) {

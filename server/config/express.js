@@ -53,6 +53,11 @@ async function startServer(){
         // Insert Routest here
 
         app.get('/success', (req, res) => {
+
+            // if(session.currentBundle){
+
+            // }
+            
             res.render('success.ejs')
         })
 

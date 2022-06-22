@@ -9,8 +9,8 @@ const {
 
 registerRouter.post('/', getUserInfo)
 
-registerRouter.get('/payment', payments)
+registerRouter.get('/payments', payments)
 
-registerRouter.post('/payment', makePayment)
+registerRouter.post('/payments', makePayment)
 
 module.exports = registerRouter
