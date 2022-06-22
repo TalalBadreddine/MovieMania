@@ -2,10 +2,12 @@ const express = require('express')
 const dotenv = require('dotenv')
 const mongoose = require('mongoose')
 const session = require('express-session')
+
 const app = express()
 const userRegisterRouter = require('../routes/user/register.js')
 const getMoviesRouter = require('../routes/user/geMoviesRouter.js')
 const manageUsersRouter = require('../routes/admin/manageUsersRoute.js');
+const getLikedMoviesRouter = require('../routes/user/getLikedMoviesRouter.js')
 
 dotenv.config({path: __dirname + '/../../.env'})
 
@@ -44,6 +46,8 @@ async function startServer(){
         app.use('/user/Movies', getMoviesRouter)
 
         app.use('/admin/manageUsers', manageUsersRouter)
+
+        app.use('/user', getLikedMoviesRouter)
 
         app.listen(serverPort, () => console.log(`Listening to port ${serverPort}`))
 
