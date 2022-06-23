@@ -13,8 +13,9 @@ const userRegisterRouter = require('../routes/user/register.js')
 const getMoviesRouter = require('../routes/user/getMoviesRouter.js')
 const manageUsersRouter = require('../routes/admin/manageUsersRoute.js');
 const  loginRouter = require('../routes/loginRoute.js')
+const userSchema = require('../models/userSchema')
 const {validateUser,validateAdmin } = require('../middleware/authMiddleware.js')
-
+const modelsHelper = require('../helper/modulesHelper')
 
 dotenv.config({path: __dirname + '/../../.env'})
 
@@ -56,13 +57,34 @@ async function startServer(){
         // Insert Routest here
 
         app.get('/success', (req, res) => {
+            let currentUser = session.currentUserInfo
+           
+            if(currentUser){
 
-            // if(session.currentBundle){
+                let user = {
+                    firstName: currentUser.firstName,
+                    lastName: currentUser.lastName,
+                    password: currentUser.password,
+                    age: currentUser.age,
+                    email: currentUser.email,
+                    bundlesId: ['62ab32a5ddb763a1b803a06c']
+                  }
 
-            // }
-            
-            res.render('success.ejs')
+            extensions.userAlreadyExist(user.email).then( async (result) => {
+                if(result){
+                    res.send("User Already Exist")
+                }else{
+                      await extensions.addToDb(userSchema, user)
+                      await extensions.userSubscribeToBundle(user.email, user.bundlesId[ user.bundlesId.length - 1])
+                      res.render('success.ejs')
+                } })
+      
+         }else {
+            res.status(401).json("can't go")
+         }
+
         })
+            
 
         app.get('/cancel', (req, res) => {
             res.render('cancel.ejs')
@@ -76,9 +98,9 @@ async function startServer(){
 
         app.use('/admin/manageUsers', validateAdmin, manageUsersRouter)
 
-        app.use('/admin/bundles', bundleRouter)
+        app.use('/admin/bundles', validateAdmin, bundleRouter)
 
-        app.use('/admin/movies', moviesRouter); 
+        app.use('/admin/movies',validateAdmin, moviesRouter); 
 
         app.listen(serverPort, () => console.log(`Listening to port ${serverPort}`))
 

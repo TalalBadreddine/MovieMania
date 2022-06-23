@@ -3,6 +3,33 @@ const hashType = 'sha1'
 const encodeAs = 'hex'
 
 
+
+// <-------- Date -------->
+
+
+function getNextMonthDate(){
+    let today = new Date();
+    let nextMonthDate = new Date(new Date().setDate(today.getDate() + 30));
+    
+    let day = nextMonthDate.getDate()
+    let month = nextMonthDate.getMonth() + 1
+    let year = nextMonthDate.getFullYear()
+
+    return `${day}/${month}/${year}`
+}
+
+
+function getCurrentDate(){
+    let today = new Date()
+    
+    let day = today.getDate()
+    let month = today.getMonth() + 1
+    let year = today.getFullYear()
+
+    return `${day}/${month}/${year}`
+}
+
+
 // <-------- String -------->
 
 
@@ -99,5 +126,7 @@ module.exports = {
     validatePassword,
     validateName,
     validateAge,
-    validateEmail
+    validateEmail,
+    getNextMonthDate,
+    getCurrentDate
 }

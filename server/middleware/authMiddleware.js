@@ -17,7 +17,8 @@ const validateUser = (req, res, next) => {
             if(err){
 
                 console.log(err.message);
-                res.redirect('/login');
+                // return res.redirect('http://localhost:3000/login');
+                return res.status(500).json("Error with the server")
 
             }else{
                 
@@ -28,7 +29,8 @@ const validateUser = (req, res, next) => {
         })
 
     }else{
-        res.redirect('/login')
+        // return res.redirect('http://localhost:3000/login')
+        return res.status(403).json("u don't have the access")
     }
 }
 
@@ -41,7 +43,9 @@ const validateAdmin = (req, res, next) => {
             if(err){
 
                 console.log(err.message);
-                res.redirect('/login');
+                // return res.redirect('/login');
+                return res.status(500).json("Error with the server")
+
 
             }else{
                 
@@ -52,7 +56,8 @@ const validateAdmin = (req, res, next) => {
         })
 
     }else{
-        res.redirect('/login')
+        // return res.redirect('/login')
+        return res.status(403).json("u don't have the access")
     }
 }
 
