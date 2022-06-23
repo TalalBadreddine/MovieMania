@@ -1,10 +1,13 @@
 const session = require('express-session')
 const userSchema = require('../models/userSchema.js')
+const bundleSchema = require('../models/bundleSchema.js')
+const manageBundlesAndUsers = require('../models/manageBundlesAndUsersSchema.js')
 const axios = require('axios')
 const dotenv = require('dotenv')
 const crypto = require('crypto');
 const nodemailer = require('nodemailer')
 const nexmo = require('nexmo')
+const modulesHelper = require('./modulesHelper.js')
 const hashType = 'sha1'
 const encodeAs = 'hex'
 
@@ -17,7 +20,7 @@ const {
     accountEmail,
     emailPassword
 } = process.env
- 
+
 
 // <-------- String -------->
 
@@ -129,6 +132,66 @@ async function getBundleForUserById(userId){
 }
 
 
+async function getUserInfo(userEmail){
+    try{
+        const results =  await userSchema.find({
+            email: userEmail
+        })
+
+        return results
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
+async function getMovieLimitByBundleId(currentBundleId){
+    try{
+        const movieLimit = await bundleSchema.find({
+            _id: currentBundleId
+        },{
+            movieLimit: 1
+        })
+        return movieLimit
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
+async function userSubscribeToBundle(userEmail, bundleId){
+    try{
+        let user 
+        await getUserInfo(userEmail).then((response) => {
+            user = response[0]
+        })
+        const nextMonthDate = modulesHelper.getNextMonthDate()
+        const currentMonthDate = modulesHelper.getCurrentDate()
+        let numberOfMoviesLeft
+
+         await getMovieLimitByBundleId(bundleId).then( (results) => {
+            numberOfMoviesLeft = results[0].movieLimit
+         })
+
+        let element = {
+            userId: user._id,
+            bundleId: bundleId,
+            startBundleDate: currentMonthDate,
+            endBundleDate: nextMonthDate,
+            numberOfMoviesLeft: parseInt(numberOfMoviesLeft)
+        } 
+
+       await addToDb(manageBundlesAndUsers, element)
+
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
 async function addToDb(modelName, modelInfo){
     try{
         let element = new modelName(modelInfo)
@@ -175,5 +238,7 @@ module.exports = {
     getAllDetailsFromDb,
     getBundleForUserById,
     userAlreadyExist,
+    getMovieLimitByBundleId,
+    userSubscribeToBundle,
     hashString  
 }
