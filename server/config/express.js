@@ -3,6 +3,7 @@ const moviesRouter = require('../routes/admin/manageMoviesRoute.js');
 const dotenv = require('dotenv')
 const mongoose = require('mongoose')
 const session = require('express-session')
+const axios = require('axios')
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser');
 const extensions = require('../helper/extensions.js')
@@ -25,7 +26,9 @@ const {
     dbName,
     serverPort,
     sessionSecret,
-    jwtSecret
+    jwtSecret,
+    movieApi,
+    apiKey
 } = process.env
 
 async function connectDB(){
@@ -72,17 +75,19 @@ async function startServer(){
 
             extensions.userAlreadyExist(user.email).then( async (result) => {
                 if(result){
+                    await extensions.existingUserSubscribeToBundle(user.email, user.bundlesId[ user.bundlesId.length - 1])
                     res.send("User Already Exist")
+
                 }else{
                       await extensions.addToDb(userSchema, user)
-                      await extensions.userSubscribeToBundle(user.email, user.bundlesId[ user.bundlesId.length - 1])
+                      await extensions.newUserSubscribeToBundle(user.email, user.bundlesId[ user.bundlesId.length - 1])
                       res.render('success.ejs')
                 } })
       
          }else {
             res.status(401).json("can't go")
          }
-
+         
         })
             
 

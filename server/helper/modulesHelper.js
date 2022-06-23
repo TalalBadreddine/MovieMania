@@ -30,6 +30,30 @@ function getCurrentDate(){
 }
 
 
+function timeDifferenceBetweenFirstDateAndSecondInDays(firstDate, secondDate){
+    let firstDateArr = firstDate.split("/")
+    let secondDateArr = secondDate.split("/")
+
+    let firstDateDay = parseInt(firstDateArr[0])
+    let firstDateMonth = parseInt(firstDateArr[1])
+    let firstDateYear = parseInt(firstDateArr[2])
+
+    let secondDateDay = parseInt(secondDateArr[0])
+    let secondDateMonth = parseInt(secondDateArr[1])
+    let secondDateYear = parseInt(secondDateArr[2])
+
+    let firstDateInSeconds = new Date(firstDateYear, firstDateMonth - 1, firstDateDay).getTime()/1000
+    let secondDateInSeconds = new Date(secondDateYear, secondDateMonth - 1, secondDateDay).getTime()/1000
+
+    return parseInt((firstDateInSeconds - secondDateInSeconds)/(3600 * 24))
+}
+
+
+function firstDateIsGreater(firstDate, secondDate){
+    return timeDifferenceBetweenFirstDateAndSecondInDays(firstDate, secondDate) > 0 
+}
+
+
 // <-------- String -------->
 
 
@@ -128,5 +152,7 @@ module.exports = {
     validateAge,
     validateEmail,
     getNextMonthDate,
+    timeDifferenceBetweenFirstDateAndSecondInDays,
+    firstDateIsGreater,
     getCurrentDate
 }

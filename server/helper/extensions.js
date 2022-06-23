@@ -161,7 +161,52 @@ async function getMovieLimitByBundleId(currentBundleId){
 }
 
 
-async function userSubscribeToBundle(userEmail, bundleId){
+async function canUserSubscribeToBundle(userEmail, bundleId){
+    try{
+        let acceptableDate = true
+        const results = await manageBundlesAndUsers.find({
+            email: userEmail,
+            bundleId: bundleId
+        })
+
+        let currentDate = modulesHelper.getCurrentDate()
+
+        for(let subscribtion of results){
+
+            if(modulesHelper.firstDateIsGreater(subscribtion.endBundleDate, currentDate)){
+                acceptableDate = false
+                break
+            }
+
+        }
+
+        return acceptableDate
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
+async function existingUserSubscribeToBundle(userEmail, bundleId){
+    try{
+       
+        await canUserSubscribeToBundle(userEmail, bundleId).then( async function(canSubscibe){
+            if(canSubscibe){
+                await newUserSubscribeToBundle(userEmail, bundleId)
+                console.log("user subscribed new Bundle")
+            }
+            else console.log("can't Subscribe")
+        })
+
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
+async function newUserSubscribeToBundle(userEmail, bundleId){
     try{
         let user 
         await getUserInfo(userEmail).then((response) => {
@@ -239,6 +284,7 @@ module.exports = {
     getBundleForUserById,
     userAlreadyExist,
     getMovieLimitByBundleId,
-    userSubscribeToBundle,
+    newUserSubscribeToBundle,
+    existingUserSubscribeToBundle,
     hashString  
 }
