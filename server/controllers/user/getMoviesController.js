@@ -1,4 +1,4 @@
-const extensions = require('./../../extensions.js')
+const extensions = require('./../../helper/extensions.js')
 const axios = require("axios");
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
@@ -80,7 +80,6 @@ const getMoviesByGenre = async (req , res) => {
                 }
             }
         }
-
         res.send(filteredMovies)
     }
     catch(error){
