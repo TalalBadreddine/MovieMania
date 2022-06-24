@@ -20,7 +20,7 @@ const getUserInfo = async (req, res, next) => {
     firstName: requestBody.firstName,
     lastName: requestBody.lastName,
     age: requestBody.age,
-    email: requestBody.email.trim(),
+    email: requestBody.email,
     password: extensions.hashString(requestBody.password)
 
    }      
@@ -32,9 +32,9 @@ const getUserInfo = async (req, res, next) => {
         if(result){
             res.send("User Already Exist")
         }else{
-              
-              await extensions.addToDb(userSchema, user)
-              return res.redirect('/payments')
+              session.currentRegiterUser =  user
+              // return res.redirect('http://localhost:3000/regiter/payments')
+              return res.status(200).json("All is good")
         }
     })
 }
@@ -44,7 +44,7 @@ const payments = (req, res, next) => {
  let userInfo = session.currentUserInfo
 
     if(userInfo == undefined){
-      return res.status(403).redirect('not allowed')
+      return res.status(403).json('not allowed')
     }
 
     let testBundle = [ 
@@ -54,7 +54,7 @@ const payments = (req, res, next) => {
         limit: 20
     }
 ]
-    res.render('payments', {data: testBundle})
+    // res.render('payments', {data: testBundle})
     
 }
 

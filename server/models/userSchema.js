@@ -39,6 +39,9 @@ const userSchema = new mongoose.Schema({
     },
     enrolledMovies: {
         type: [String]
+    },
+    imageId: {
+        type: String
     }
 })
 
