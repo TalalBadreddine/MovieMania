@@ -23,6 +23,7 @@ const loginFunc = async (req, res, next) => {
     if(user.email == adminUserName && user.password == extentions.hashString(adminPassword)){
 
         jwt.sign({user: user, role: 'admin'}, jwtSecret, (err, token) => {
+            session.currentUserInfo = user
             res.cookie('jwt', token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 })
             res.status(201).json(token)
         })
@@ -36,9 +37,9 @@ const loginFunc = async (req, res, next) => {
 
     
     if(results.length == 1){
-        session.currentUserInfo = results
 
         jwt.sign({user: user, role: 'user'}, jwtSecret, (err, token) => {
+            session.currentUserInfo = results
             res.cookie('jwt', token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 })
             res.status(201).json(token)
         })

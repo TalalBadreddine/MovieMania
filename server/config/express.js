@@ -5,9 +5,10 @@ const session = require('express-session')
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser');
 const extensions = require('../helper/extensions.js')
-const app = express()
 const userRegisterRouter = require('../routes/user/register.js')
 const getMoviesRouter = require('../routes/user/getMoviesRouter.js')
+const getInfoRouter = require('../routes/user/getInfoRouter.js')
+console.log(getInfoRouter)
 const manageUsersRouter = require('../routes/admin/manageUsersRoute.js');
 const  loginRouter = require('../routes/loginRoute.js')
 const {validateUser,validateAdmin } = require('../middleware/authMiddleware.js')
@@ -52,6 +53,8 @@ async function startServer(){
         app.use('/register', userRegisterRouter)
 
         app.use('/user/Movies', validateUser, getMoviesRouter)
+
+        app.use('/user/profile', getInfoRouter)
 
         app.use('/admin/manageUsers', validateAdmin, manageUsersRouter)
 
