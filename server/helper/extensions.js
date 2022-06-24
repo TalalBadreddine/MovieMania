@@ -160,6 +160,24 @@ async function getMovieLimitByBundleId(currentBundleId){
     }
 }
 
+async function userMustSubscribe(userEmail){
+    try{
+
+        let bundles =  await manageBundlesAndUsers.find({
+
+        },{
+            _id: 1
+        })
+
+        for(let id of bundlesId){
+            if(canUserSubscribeToBundle(userEmail, id))return 
+        }
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
 
 async function canUserSubscribeToBundle(userEmail, bundleId){
     try{

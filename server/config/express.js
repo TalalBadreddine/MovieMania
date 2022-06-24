@@ -3,13 +3,12 @@ const moviesRouter = require('../routes/admin/manageMoviesRoute.js');
 const dotenv = require('dotenv')
 const mongoose = require('mongoose')
 const session = require('express-session')
-const axios = require('axios')
-const jwt = require('jsonwebtoken')
+const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const extensions = require('../helper/extensions.js')
+const multer = require("multer");
 const path = require('path')
 const bundleRouter = require('../routes/admin/manageBundlesRoute.js')
-const app = express()
 const userRegisterRouter = require('../routes/user/register.js')
 const getMoviesRouter = require('../routes/user/getMoviesRouter.js')
 const manageUsersRouter = require('../routes/admin/manageUsersRoute.js');
@@ -17,6 +16,7 @@ const  loginRouter = require('../routes/loginRoute.js')
 const userSchema = require('../models/userSchema')
 const {validateUser,validateAdmin } = require('../middleware/authMiddleware.js')
 const modelsHelper = require('../helper/modulesHelper')
+const upload = multer();
 
 dotenv.config({path: __dirname + '/../../.env'})
 
@@ -46,6 +46,12 @@ async function startServer(){
         app.use(cookieParser())
 
         app.use(express.json())
+
+        app.use(bodyParser.json())
+
+        upload.array('pictures', 1)
+
+        app.use(bodyParser.urlencoded({ extended: true }))
 
         app.set('views', path.join(__dirname, '/../views/'))
 

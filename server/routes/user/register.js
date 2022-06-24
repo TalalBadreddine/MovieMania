@@ -1,5 +1,18 @@
 const router = require('express').Router
+const path = require('path')
 const registerRouter = router()
+const multer = require('multer')
+ 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, __dirname + '/../../../img')
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname))
+    }
+  })
+  
+const upload = multer({storage: storage})
 
 const {
     getUserInfo,
@@ -7,7 +20,7 @@ const {
     makePayment
 } = require('../../controllers/user/registerController.js')
 
-registerRouter.post('/', getUserInfo)
+registerRouter.post('/',  upload.single('image'), getUserInfo)
 
 registerRouter.get('/payments', payments)
 
