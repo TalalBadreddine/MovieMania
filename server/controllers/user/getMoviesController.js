@@ -18,7 +18,10 @@ const {
 const getAllMovies = async (req, res) => {
 
     try{
-
+        extensions.getAllBundlesThatUserCanSubscribeTo(session.currentUserInfo.email).then((response) => {
+            console.log(response)
+        } )
+        
         let dataBaseIsEmpty 
 
         await extensions.dbIsEmpty(moviesSchema).then( async (response) => {
@@ -119,7 +122,7 @@ const likeMovieById = async(req, res) => {
                 likedMovies: userLikedMovies
             }
         })
-                
+
         res.status(200).json("Done")
     }
     catch(err){
@@ -127,4 +130,42 @@ const likeMovieById = async(req, res) => {
     }
 }
 
-module.exports = {getAllMovies, getMoviesByGenre, likeMovieById}
+const subscribeToMovieById = async (req, res) => {
+    try{
+
+        const movieId = req.query.movieId
+        let userInfo = session.currentUserInfo
+        let userLikedMovies = userInfo.likedMovies
+        let movieIsAlreadyLiked = userLikedMovies.includes(movieId)
+
+        if(movieIsAlreadyLiked){
+
+            userLikedMovies = userLikedMovies.filter( (currentMovieId) => currentMovieId != movieId)
+            console.log(`like Removed for movieId => ${movieId}`)
+
+        }else{
+
+            userLikedMovies.push(movieId)
+            console.log(`like added for movieId => ${movieId}`)
+
+        }
+
+        userInfo.likedMovies = userLikedMovies
+        session.userInfo = userInfo
+
+        await userSchema.updateOne({
+            _id: userInfo._id
+        },{
+            $set: {
+                likedMovies: userLikedMovies
+            }
+        })
+
+        res.status(200).json("Done")
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+module.exports = {getAllMovies, getMoviesByGenre, likeMovieById, subscribeToMovieById}
