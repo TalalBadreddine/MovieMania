@@ -8,6 +8,8 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer')
 const nexmo = require('nexmo')
 const modulesHelper = require('./modulesHelper.js')
+const manageBundlesAndUsersSchema = require('../models/manageBundlesAndUsersSchema.js')
+const { response } = require('express')
 const hashType = 'sha1'
 const encodeAs = 'hex'
 
@@ -102,6 +104,47 @@ async function getMovieDetailById(id){
 // <-------- DataBase -------->
 
 
+async function getAllBundlesThatUserCanSubscribeTo(userEmail, onlyId = false){
+    try{
+       let userCurrentBundles
+
+       await getUserThisMonthBundles(userEmail, false).then((response) => {
+            userCurrentBundles = response
+       })
+
+
+       let userCurrentBundlesId = userCurrentBundles.map((bundle) => bundle.bundleId)
+       let allBundles = await bundleSchema.find()
+       let filterdBundles = []
+
+       for(let i = 0 ; i < allBundles.length ; i++){
+        if(userCurrentBundlesId.includes(`${allBundles[i]._id}`))continue
+        filterdBundles.push(allBundles[i])
+       }
+       
+       
+       if(onlyId)return filterdBundles.map((bundle) => bundle._id)
+
+       return filterdBundles
+
+        // let allBundlesDetails = []
+
+        // for( let currentBundleId of allBundlesDetails){
+
+        //     let results = await bundleSchema.find({
+        //         bundleId: currentBundleId
+        //     })
+
+        //     allBundlesDetails.push(results)
+        // }
+        
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
 async function userAlreadyExist(email){
     try{
         const results = await userSchema.find({
@@ -138,7 +181,7 @@ async function getUserInfo(userEmail){
             email: userEmail
         })
 
-        return results
+        return results[0]
     }
     catch(err){
         console.log(err.message)
@@ -160,18 +203,33 @@ async function getMovieLimitByBundleId(currentBundleId){
     }
 }
 
-async function userMustSubscribe(userEmail){
+
+async function getUserThisMonthBundles(userEmail, onlyId = false){
     try{
+        let userInfo
 
-        let bundles =  await manageBundlesAndUsers.find({
-
-        },{
-            _id: 1
+        await getUserInfo(userEmail).then( (response) => {
+            userInfo = response
         })
+    
+        let userBundles = await manageBundlesAndUsers.find({
+            userId: userInfo._id
+        })
+  
+         let currentDate = modulesHelper.getCurrentDate()
+         let thisMonthBundles = []
 
-        for(let id of bundlesId){
-            if(canUserSubscribeToBundle(userEmail, id))return 
+        for(let subscribtion of userBundles){
+
+            if(modulesHelper.firstDateIsGreater(subscribtion.endBundleDate, currentDate)){
+                thisMonthBundles.push(subscribtion)
+            }
+
         }
+
+        if(!onlyId)return thisMonthBundles
+        return thisMonthBundles.map( (bundle) => bundle._id)
+
     }
     catch(err){
         console.log(err.message)
@@ -179,26 +237,22 @@ async function userMustSubscribe(userEmail){
 }
 
 
-async function canUserSubscribeToBundle(userEmail, bundleId){
+async function canUserSubscribeToSpecificBundle(userEmail, bundleId){
     try{
-        let acceptableDate = true
-        const results = await manageBundlesAndUsers.find({
-            email: userEmail,
-            bundleId: bundleId
+
+        let thisMonthBundles
+
+        await getUserThisMonthBundles(userEmail, true).then( (bundles) => {
+            thisMonthBundles = bundles
         })
 
-        let currentDate = modulesHelper.getCurrentDate()
 
-        for(let subscribtion of results){
-
-            if(modulesHelper.firstDateIsGreater(subscribtion.endBundleDate, currentDate)){
-                acceptableDate = false
-                break
-            }
-
+        for(let bundle of thisMonthBundles){
+            if(bundle.numberOfMoviesLeft > 0 || bundle._id == bundleId)return false
         }
+        
+        return true
 
-        return acceptableDate
     }
     catch(err){
         console.log(err.message)
@@ -209,7 +263,7 @@ async function canUserSubscribeToBundle(userEmail, bundleId){
 async function existingUserSubscribeToBundle(userEmail, bundleId){
     try{
        
-        await canUserSubscribeToBundle(userEmail, bundleId).then( async function(canSubscibe){
+        await canUserSubscribeToSpecificBundle(userEmail, bundleId).then( async function(canSubscibe){
             if(canSubscibe){
                 await newUserSubscribeToBundle(userEmail, bundleId)
                 console.log("user subscribed new Bundle")
@@ -228,7 +282,7 @@ async function newUserSubscribeToBundle(userEmail, bundleId){
     try{
         let user 
         await getUserInfo(userEmail).then((response) => {
-            user = response[0]
+            user = response
         })
         const nextMonthDate = modulesHelper.getNextMonthDate()
         const currentMonthDate = modulesHelper.getCurrentDate()
@@ -338,5 +392,7 @@ module.exports = {
     newUserSubscribeToBundle,
     existingUserSubscribeToBundle,
     getAllUserRelationsWithBundles,
+    getUserThisMonthBundles,
+    getAllBundlesThatUserCanSubscribeTo,
     hashString  
 }
