@@ -3,7 +3,8 @@ const axios = require("axios");
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 const session = require('express-session')
-const moviesSchema = require('../../models/movieSchema.js')
+const moviesSchema = require('../../models/movieSchema.js');
+const userSchema = require('../../models/userSchema.js');
 
 dotenv.config({path: __dirname + '/../../../.env'})
 
@@ -87,4 +88,43 @@ const getMoviesByGenre = async (req , res) => {
     }
 }
 
-module.exports = {getAllMovies, getMoviesByGenre}
+const likeMovieById = async(req, res) => {
+
+    try{
+
+        const movieId = req.query.movieId
+        let userInfo = session.currentUserInfo
+        let userLikedMovies = userInfo.likedMovies
+        let movieIsAlreadyLiked = userLikedMovies.includes(movieId)
+
+        if(movieIsAlreadyLiked){
+
+            userLikedMovies = userLikedMovies.filter( (currentMovieId) => currentMovieId != movieId)
+            console.log(`like Removed for movieId => ${movieId}`)
+
+        }else{
+
+            userLikedMovies.push(movieId)
+            console.log(`like added for movieId => ${movieId}`)
+
+        }
+
+        userInfo.likedMovies = userLikedMovies
+        session.userInfo = userInfo
+
+        await userSchema.updateOne({
+            _id: userInfo._id
+        },{
+            $set: {
+                likedMovies: userLikedMovies
+            }
+        })
+                
+        res.status(200).json("Done")
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+module.exports = {getAllMovies, getMoviesByGenre, likeMovieById}

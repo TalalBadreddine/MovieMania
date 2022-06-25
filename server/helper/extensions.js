@@ -292,6 +292,39 @@ async function dbIsEmpty(SchemaName){
 }
 
 
+async function getAllUserRelationsWithBundles(currentUserEmail, currentUserId = null){
+    try{
+
+        let results
+
+         if(currentUserId){
+
+            results = await manageBundlesAndUsers.find({
+                userId: currentUserId
+            })
+
+        }else{
+            
+            let userInfo 
+
+            getUserInfo(currentUserEmail).then((response) => {
+                userInfo = response
+            })
+
+            results = await manageBundlesAndUsers.find({
+                userId: userInfo._id
+            })
+
+        }
+
+         return results
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
 module.exports = {
     sessionHaveMovies,
     dbIsEmpty,
@@ -304,5 +337,6 @@ module.exports = {
     getMovieLimitByBundleId,
     newUserSubscribeToBundle,
     existingUserSubscribeToBundle,
+    getAllUserRelationsWithBundles,
     hashString  
 }
