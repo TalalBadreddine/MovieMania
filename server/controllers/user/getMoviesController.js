@@ -5,6 +5,8 @@ const dotenv = require('dotenv')
 const session = require('express-session')
 const moviesSchema = require('../../models/movieSchema.js');
 const userSchema = require('../../models/userSchema.js');
+const manageBundlesAndUsersSchema = require('../../models/manageBundlesAndUsersSchema.js');
+const { response } = require('express');
 
 dotenv.config({path: __dirname + '/../../../.env'})
 
@@ -17,10 +19,17 @@ const {
 
 const getAllMovies = async (req, res) => {
 
-    try{
-        extensions.getAllBundlesThatUserCanSubscribeTo(session.currentUserInfo.email).then((response) => {
-            console.log(response)
-        } )
+    try{ 
+        let availbleBundles
+
+        await extensions.getUserThisMonthBundles(session.currentUserInfo.email).then( (response) => {
+            availbleBundles = response
+        })
+
+        if(availbleBundles.length <= 0){
+            // redirect
+            return res.status(403).json("You need to subscribe to new Bundle")
+        }
         
         let dataBaseIsEmpty 
 
@@ -130,35 +139,51 @@ const likeMovieById = async(req, res) => {
     }
 }
 
-const subscribeToMovieById = async (req, res) => {
-    try{
 
+const subscribeToMovieById = async (req, res) => {
+    try{      
+  
         const movieId = req.query.movieId
         let userInfo = session.currentUserInfo
-        let userLikedMovies = userInfo.likedMovies
-        let movieIsAlreadyLiked = userLikedMovies.includes(movieId)
+        let nonOverLimitBundles 
+        let allSubscribedMovies = []    
 
-        if(movieIsAlreadyLiked){
+        await extensions.getThisMonthEnrolledMovies(userInfo.email).then( (response) => {
+            allSubscribedMovies = response
+        })
 
-            userLikedMovies = userLikedMovies.filter( (currentMovieId) => currentMovieId != movieId)
-            console.log(`like Removed for movieId => ${movieId}`)
+        await extensions.getUserCurrentMonthBundlesWithNonOverLimitMovies(userInfo.email).then( (response) => {
+            nonOverLimitBundles = response
+           
+        })
+
+
+        if(nonOverLimitBundles.length == 0){
+            return res.json("You can't subscribe to movies, your bundle limit is full")
+        }
+  
+        let userEnrolledMovies = nonOverLimitBundles[0].enrolledMoviesId
+        let movieIsAlreadyEnrolled = allSubscribedMovies.includes(movieId)
+       
+        if(movieIsAlreadyEnrolled){
+            
+            return res.status(200).json("Movies Already Enrolled")
 
         }else{
 
-            userLikedMovies.push(movieId)
-            console.log(`like added for movieId => ${movieId}`)
+            userEnrolledMovies.push(movieId)
+            console.log(`Enrolled Movie added => ${movieId}`)
 
         }
 
-        userInfo.likedMovies = userLikedMovies
-        session.userInfo = userInfo
 
-        await userSchema.updateOne({
-            _id: userInfo._id
+        await manageBundlesAndUsersSchema.updateOne({
+            userId: userInfo._id
         },{
             $set: {
-                likedMovies: userLikedMovies
-            }
+                enrolledMoviesId: userEnrolledMovies
+            },
+            $inc: { numberOfMoviesLeft: -1 }
         })
 
         res.status(200).json("Done")

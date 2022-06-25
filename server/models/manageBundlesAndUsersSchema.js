@@ -21,6 +21,9 @@ const manageBundlesAndUsersSchema = new mongoose.Schema({
     },
     numberOfMoviesLeft:{
         type: Number
+    },
+    enrolledMoviesId:{
+        type: [String]
     }
 })
 
