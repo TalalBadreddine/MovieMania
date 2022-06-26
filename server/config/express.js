@@ -6,6 +6,7 @@ const app = express()
 const userRegisterRouter = require('../routes/user/register.js')
 const getMoviesRouter = require('../routes/user/geMoviesRouter.js')
 const manageUsersRouter = require('../routes/admin/manageUsersRoute.js');
+const getNewsRouter = require('../routes/user/getNewsRouter')
 
 dotenv.config({path: __dirname + '/../../.env'})
 
@@ -44,6 +45,10 @@ async function startServer(){
         app.use('/user/Movies', getMoviesRouter)
 
         app.use('/admin/manageUsers', manageUsersRouter)
+
+        app.use('/upcoming', getNewsRouter)
+
+        
 
         app.listen(serverPort, () => console.log(`Listening to port ${serverPort}`))
 
