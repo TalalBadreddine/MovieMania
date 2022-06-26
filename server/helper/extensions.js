@@ -9,7 +9,6 @@ const nodemailer = require('nodemailer')
 const nexmo = require('nexmo')
 const modulesHelper = require('./modulesHelper.js')
 const manageBundlesAndUsersSchema = require('../models/manageBundlesAndUsersSchema.js')
-const { response } = require('express')
 const hashType = 'sha1'
 const encodeAs = 'hex'
 
@@ -102,6 +101,34 @@ async function getMovieDetailById(id){
 
 
 // <-------- DataBase -------->
+
+async function getNumberOfTimeMoviesIsSubscribed(){
+    try{
+        let allMovies = new Map()
+        let allBundles = await manageBundlesAndUsersSchema.find()
+        
+        for(let i = 0 ; i < allBundles.length;  i++){
+            let currentBundleMovies = allBundles[i].enrolledMoviesId
+  
+            for(let j = 0 ; j < currentBundleMovies.length ; j++){
+
+                if(allMovies.has(currentBundleMovies[j])){
+                   
+                    allMovies.set(currentBundleMovies[j], allMovies.get(currentBundleMovies[j]) + 1)
+
+                }else{
+                    console.log(currentBundleMovies[j])
+                    allMovies.set(currentBundleMovies[j], 1)
+
+                }
+            }
+        }
+        return allMovies
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
 
 
 async function getAllBundlesThatUserCanSubscribeTo(userEmail, onlyId = false){
@@ -450,6 +477,7 @@ module.exports = {
     getUserThisMonthBundles,
     getAllBundlesThatUserCanSubscribeTo,
     getUserCurrentMonthBundlesWithNonOverLimitMovies,
+    getNumberOfTimeMoviesIsSubscribed,
     getThisMonthEnrolledMovies,
     hashString  
 }

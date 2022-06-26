@@ -12,6 +12,7 @@ const bundleRouter = require('../routes/admin/manageBundlesRoute.js')
 const userRegisterRouter = require('../routes/user/register.js')
 const getMoviesRouter = require('../routes/user/getMoviesRouter.js')
 const manageUsersRouter = require('../routes/admin/manageUsersRoute.js');
+const displayDashBoardInfo = require('../controllers/admin/dashBoardController')
 const  loginRouter = require('../routes/loginRoute.js')
 const userSchema = require('../models/userSchema')
 const {validateUser,validateAdmin } = require('../middleware/authMiddleware.js')
@@ -104,6 +105,8 @@ async function startServer(){
         app.use('/login', loginRouter)
 
         app.use('/register', userRegisterRouter)
+
+        app.use('/admin/dashboard', validateAdmin, displayDashBoardInfo)
 
         app.use('/user/Movies', validateUser, getMoviesRouter)
 
