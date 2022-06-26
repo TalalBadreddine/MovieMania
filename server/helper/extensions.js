@@ -51,6 +51,18 @@ function sessionHaveMovies(){
     }
 }
 
+    function sessionHaveUpcomingMovies(){
+        try{
+            const results = session.currentUserUpcomingMovies
+            return results != undefined
+        }
+        catch(err){
+            console.log(err.message)
+            return false
+        }
+    }
+
+
 
 // <-------- API -------->
 
@@ -58,9 +70,13 @@ function sessionHaveMovies(){
 async function getAllMoviesId(){
     let moviesId = []
 
+
     for(let i = 0 ; i < 5 ;i++){
         const getAllMovies = {
             method: 'GET',
+
+            // https://api.themoviedb.org/3/discover/movie?api_key=<<api_key>>
+
             url: `${movieApi}discover/movie?api_key=${apiKey}&page=${i+1}`,
                 headers: {
                     'X-RapidAPI-Key': 'b430c9dc9cmsh98401db1637b694p116976jsnfaeb2c0dc52d',
@@ -78,6 +94,60 @@ async function getAllMoviesId(){
     }
     return moviesId
 }
+
+// <------ News API ------>
+
+// async function getAllUpcomingMoviesId(){
+//     let upcomingMoviesId = []
+
+
+//     for(let i = 0 ; i < 5 ;i++){
+//         const getAllUpcomingMovies = {
+//             method: 'GET',
+
+//             // https://api.themoviedb.org/3/discover/movie?api_key=<<api_key>>
+
+//             url: `${movieApi}movie/upcoming?api_key=${apiKey}&language=en-US&page=1`,
+//                 headers: {
+//                     'X-RapidAPI-Key': 'b430c9dc9cmsh98401db1637b694p116976jsnfaeb2c0dc52d',
+//                     'X-RapidAPI-Host': 'movies-app1.p.rapidapi.com' 
+//                 }   
+//          }
+//         await axios.request(getAllUpcomingMovies).then(function (response){
+//             let data = response.data['results']
+            
+//             for(let i = 0 ; i < data.length ; i++){
+//              upcomingMoviesId.push(data[i]['id'])
+             
+//             }
+//         })   
+//     }
+    
+//     return upcomingMoviesId
+// }
+
+   async function getUpcomingMovies (){ 
+         
+            const config = {
+                method: 'get',
+                url: `${movieApi}movie/upcoming?api_key=${apiKey}&language=en-US&page=1`,
+                headers: { 'User-Agent': 'Axios - console app' }
+            }
+        
+            let apiResponse = await axios(config)
+        
+ 
+          return apiResponse
+          
+            
+      }
+        
+        
+    
+
+    
+    
+
 
 
 async function getMovieDetailById(id){
@@ -100,6 +170,27 @@ async function getMovieDetailById(id){
     return results
 }
 
+// <----- News ---->
+
+// async function getUpcomingMovieDetailById(id){
+//     let results 
+
+//     try{
+//         const reponse = await axios.get(`${movieApi}/movie/upcoming/${id}`, {
+//              params: {
+//             api_key: apiKey,
+//             append_to_response: "videos"
+//          }})
+
+//          return reponse.data
+//     }
+//     catch(err){
+
+//         console.log(err.message)
+
+//     }
+//     return results
+// }
 
 // <-------- DataBase -------->
 
@@ -475,6 +566,7 @@ async function getAllUserRelationsWithBundles(currentUserEmail, currentUserId = 
 
 module.exports = {
     sessionHaveMovies,
+    sessionHaveUpcomingMovies,
     sessionHaveLikedMovies,
     dbIsEmpty,
     getAllMoviesId,
@@ -482,6 +574,8 @@ module.exports = {
     addToDb,
     getAllDetailsFromDb,
     getBundleForUserById,
+    hashString,
+    getUpcomingMovies,
     userAlreadyExist,
     getMovieLimitByBundleId,
     newUserSubscribeToBundle,

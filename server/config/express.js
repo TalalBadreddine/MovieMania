@@ -12,6 +12,7 @@ const bundleRouter = require('../routes/admin/manageBundlesRoute.js')
 const userRegisterRouter = require('../routes/user/register.js')
 const getMoviesRouter = require('../routes/user/getMoviesRouter.js')
 const manageUsersRouter = require('../routes/admin/manageUsersRoute.js');
+const getNewsRouter = require('../routes/user/getNewsRouter')
 const displayDashBoardInfo = require('../controllers/admin/dashBoardController')
 const getLikedMoviesRouter = require('../routes/user/getLikedMoviesRouter.js')
 const  loginRouter = require('../routes/loginRoute.js')
@@ -19,6 +20,7 @@ const userSchema = require('../models/userSchema')
 const {validateUser,validateAdmin } = require('../middleware/authMiddleware.js')
 const modelsHelper = require('../helper/modulesHelper')
 const upload = multer();
+
 
 dotenv.config({path: __dirname + '/../../.env'})
 
@@ -118,6 +120,10 @@ async function startServer(){
         app.use('/admin/movies',validateAdmin, moviesRouter); 
 
         app.use('/user', getLikedMoviesRouter)
+
+        app.use('/upcoming', getNewsRouter)
+
+        
 
         app.listen(serverPort, () => console.log(`Listening to port ${serverPort}`))
 
