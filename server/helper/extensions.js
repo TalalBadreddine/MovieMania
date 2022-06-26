@@ -8,6 +8,7 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer')
 const nexmo = require('nexmo')
 const modulesHelper = require('./modulesHelper.js')
+const manageBundlesAndUsersSchema = require('../models/manageBundlesAndUsersSchema.js')
 const hashType = 'sha1'
 const encodeAs = 'hex'
 
@@ -102,6 +103,70 @@ async function getMovieDetailById(id){
 
 // <-------- DataBase -------->
 
+async function getNumberOfTimeMoviesIsSubscribed(){
+    try{
+        let allMovies = new Map()
+        let allBundles = await manageBundlesAndUsersSchema.find()
+        
+        for(let i = 0 ; i < allBundles.length;  i++){
+            let currentBundleMovies = allBundles[i].enrolledMoviesId
+  
+            for(let j = 0 ; j < currentBundleMovies.length ; j++){
+
+                if(allMovies.has(currentBundleMovies[j])){
+                   
+                    allMovies.set(currentBundleMovies[j], allMovies.get(currentBundleMovies[j]) + 1)
+
+                }else{
+                    console.log(currentBundleMovies[j])
+                    allMovies.set(currentBundleMovies[j], 1)
+
+                }
+            }
+        }
+        return allMovies
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
+async function getAllBundlesThatUserCanSubscribeTo(userEmail, onlyId = false){
+    try{
+        let currentAvailbleBundle
+
+        await getUserCurrentMonthBundlesWithNonOverLimitMovies(userEmail).then((response) => {
+            currentAvailbleBundle = response
+        })
+
+        if(currentAvailbleBundle.length > 0)return []
+
+       let userCurrentBundles
+
+       await getUserThisMonthBundles(userEmail, false).then((response) => {
+            userCurrentBundles = response
+       })
+
+       let userCurrentBundlesId = userCurrentBundles.map((bundle) => bundle.bundleId)
+       let allBundles = await bundleSchema.find()
+       let filterdBundles = []
+
+       for(let i = 0 ; i < allBundles.length ; i++){
+        if(userCurrentBundlesId.includes(`${allBundles[i]._id}`))continue
+        filterdBundles.push(allBundles[i])
+       }
+       
+       
+       if(onlyId)return filterdBundles.map((bundle) => bundle._id)
+
+       return filterdBundles
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
 
 async function userAlreadyExist(email){
     try{
@@ -139,7 +204,7 @@ async function getUserInfo(userEmail){
             email: userEmail
         })
 
-        return results
+        return results[0]
     }
     catch(err){
         console.log(err.message)
@@ -161,18 +226,25 @@ async function getMovieLimitByBundleId(currentBundleId){
     }
 }
 
-async function userMustSubscribe(userEmail){
+async function getThisMonthEnrolledMovies(userEmail){
     try{
 
-        let bundles =  await manageBundlesAndUsers.find({
+        let thisMonthBundles
+        let subscribedMovies = []
 
-        },{
-            _id: 1
+        await getUserThisMonthBundles(userEmail).then((response) => {
+            thisMonthBundles = response
         })
 
-        for(let id of bundlesId){
-            if(canUserSubscribeToBundle(userEmail, id))return 
+        for(let i = 0 ; i < thisMonthBundles.length; i++){
+            let currentBundleMovies = thisMonthBundles[i].enrolledMoviesId
+
+            for(let j = 0 ; j < currentBundleMovies.length ; j++){
+                subscribedMovies.push(currentBundleMovies[j])
+            }
         }
+ 
+        return subscribedMovies
     }
     catch(err){
         console.log(err.message)
@@ -180,26 +252,90 @@ async function userMustSubscribe(userEmail){
 }
 
 
-async function canUserSubscribeToBundle(userEmail, bundleId){
+async function getUserThisMonthBundles(userEmail, onlyId = false){
     try{
-        let acceptableDate = true
-        const results = await manageBundlesAndUsers.find({
-            email: userEmail,
-            bundleId: bundleId
+        let userInfo
+
+        await getUserInfo(userEmail).then( (response) => {
+            userInfo = response
         })
+    
+        let userBundles = await manageBundlesAndUsers.find({
+            userId: userInfo._id
+        })
+  
+         let currentDate = modulesHelper.getCurrentDate()
+         let thisMonthBundles = []
 
-        let currentDate = modulesHelper.getCurrentDate()
-
-        for(let subscribtion of results){
+        for(let subscribtion of userBundles){
 
             if(modulesHelper.firstDateIsGreater(subscribtion.endBundleDate, currentDate)){
-                acceptableDate = false
-                break
+                thisMonthBundles.push(subscribtion)
             }
 
         }
 
-        return acceptableDate
+        if(!onlyId)return thisMonthBundles
+        return thisMonthBundles.map( (bundle) => bundle._id)
+
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
+async function getUserCurrentMonthBundlesWithNonOverLimitMovies(userEmail, onlyId = false){
+    try{
+        let userInfo
+
+        await getUserInfo(userEmail).then( (response) => {
+            userInfo = response
+        })
+    
+        let userBundles = await manageBundlesAndUsers.find({
+            userId: userInfo._id
+        })
+  
+         let currentDate = modulesHelper.getCurrentDate()
+         let thisMonthBundles = []
+
+        for(let subscribtion of userBundles){
+
+            if(modulesHelper.firstDateIsGreater(subscribtion.endBundleDate, currentDate)){
+                thisMonthBundles.push(subscribtion)
+            }
+
+        }
+        thisMonthBundles = thisMonthBundles.filter( (bundle) => bundle.numberOfMoviesLeft > 0)
+
+        if(!onlyId)return thisMonthBundles
+
+        return thisMonthBundles.map( (bundle) => bundle._id)
+
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
+async function canUserSubscribeToSpecificBundle(userEmail, bundleId){
+    try{
+
+        let thisMonthBundles
+
+        await getUserThisMonthBundles(userEmail, true).then( (bundles) => {
+            thisMonthBundles = bundles
+        })
+
+
+        for(let bundle of thisMonthBundles){
+            if(bundle.numberOfMoviesLeft > 0 || bundle._id == bundleId)return false
+        }
+        
+        return true
+
     }
     catch(err){
         console.log(err.message)
@@ -210,7 +346,7 @@ async function canUserSubscribeToBundle(userEmail, bundleId){
 async function existingUserSubscribeToBundle(userEmail, bundleId){
     try{
        
-        await canUserSubscribeToBundle(userEmail, bundleId).then( async function(canSubscibe){
+        await canUserSubscribeToSpecificBundle(userEmail, bundleId).then( async function(canSubscibe){
             if(canSubscibe){
                 await newUserSubscribeToBundle(userEmail, bundleId)
                 console.log("user subscribed new Bundle")
@@ -229,7 +365,7 @@ async function newUserSubscribeToBundle(userEmail, bundleId){
     try{
         let user 
         await getUserInfo(userEmail).then((response) => {
-            user = response[0]
+            user = response
         })
         const nextMonthDate = modulesHelper.getNextMonthDate()
         const currentMonthDate = modulesHelper.getCurrentDate()
@@ -304,6 +440,39 @@ function sessionHaveLikedMovies(){
 }
 
 
+async function getAllUserRelationsWithBundles(currentUserEmail, currentUserId = null){
+    try{
+
+        let results
+
+         if(currentUserId){
+
+            results = await manageBundlesAndUsers.find({
+                userId: currentUserId
+            })
+
+        }else{
+            
+            let userInfo 
+
+            getUserInfo(currentUserEmail).then((response) => {
+                userInfo = response
+            })
+
+            results = await manageBundlesAndUsers.find({
+                userId: userInfo._id
+            })
+
+        }
+
+         return results
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
 module.exports = {
     sessionHaveMovies,
     sessionHaveLikedMovies,
@@ -317,5 +486,11 @@ module.exports = {
     getMovieLimitByBundleId,
     newUserSubscribeToBundle,
     existingUserSubscribeToBundle,
+    getAllUserRelationsWithBundles,
+    getUserThisMonthBundles,
+    getAllBundlesThatUserCanSubscribeTo,
+    getUserCurrentMonthBundlesWithNonOverLimitMovies,
+    getNumberOfTimeMoviesIsSubscribed,
+    getThisMonthEnrolledMovies,
     hashString  
 }
