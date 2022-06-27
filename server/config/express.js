@@ -11,6 +11,8 @@ const path = require('path')
 const bundleRouter = require('../routes/admin/manageBundlesRoute.js')
 const userRegisterRouter = require('../routes/user/register.js')
 const getMoviesRouter = require('../routes/user/getMoviesRouter.js')
+const getInfoRouter = require('../routes/user/getInfoRouter.js')
+console.log(getInfoRouter)
 const manageUsersRouter = require('../routes/admin/manageUsersRoute.js');
 const getNewsRouter = require('../routes/user/getNewsRouter')
 const displayDashBoardInfo = require('../controllers/admin/dashBoardController')
@@ -112,6 +114,8 @@ async function startServer(){
         app.use('/admin/dashboard', validateAdmin, displayDashBoardInfo)
 
         app.use('/user/Movies', validateUser, getMoviesRouter)
+
+        app.use('/user/profile', getInfoRouter)
 
         app.use('/admin/manageUsers', validateAdmin, manageUsersRouter)
 
