@@ -37,9 +37,11 @@ const loginFunc = async (req, res, next) => {
 
     
     if(results.length == 1){
+        
 
         jwt.sign({user: user, role: 'user'}, jwtSecret, (err, token) => {
-            session.currentUserInfo = results
+            session.currentUserInfo = results[0]
+            session.currentUserAllTimeBundles
             res.cookie('jwt', token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 })
             res.status(201).json(token)
         })
