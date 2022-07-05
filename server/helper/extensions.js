@@ -63,7 +63,8 @@ async function getAllMoviesId(){
                 headers: {
                     'X-RapidAPI-Key': 'b430c9dc9cmsh98401db1637b694p116976jsnfaeb2c0dc52d',
                     'X-RapidAPI-Host': 'movies-app1.p.rapidapi.com' 
-                }   
+                } ,
+              //  port:8080
          }
         await axios.request(getAllMovies).then(function (response){
             let data = response.data['results']
@@ -425,6 +426,17 @@ async function dbIsEmpty(SchemaName){
     return 1
 }
 
+function sessionHaveLikedMovies(){
+    try{
+        const results = session.currentUserLikedMovies
+        return results != undefined
+    }
+    catch(err){
+        console.log(err.message)
+        return false
+    }
+}
+
 
 async function getAllUserRelationsWithBundles(currentUserEmail, currentUserId = null){
     try{
@@ -461,6 +473,7 @@ async function getAllUserRelationsWithBundles(currentUserEmail, currentUserId = 
 
 module.exports = {
     sessionHaveMovies,
+    sessionHaveLikedMovies,
     dbIsEmpty,
     getAllMoviesId,
     getMovieDetailById,

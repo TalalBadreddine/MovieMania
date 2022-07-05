@@ -13,6 +13,7 @@ const userRegisterRouter = require('../routes/user/register.js')
 const getMoviesRouter = require('../routes/user/getMoviesRouter.js')
 const manageUsersRouter = require('../routes/admin/manageUsersRoute.js');
 const displayDashBoardInfo = require('../controllers/admin/dashBoardController')
+const getLikedMoviesRouter = require('../routes/user/getLikedMoviesRouter.js')
 const  loginRouter = require('../routes/loginRoute.js')
 const userSchema = require('../models/userSchema')
 const {validateUser,validateAdmin } = require('../middleware/authMiddleware.js')
@@ -114,6 +115,8 @@ async function startServer(){
         app.use('/admin/bundles', validateAdmin, bundleRouter)
 
         app.use('/admin/movies',validateAdmin, moviesRouter); 
+
+        app.use('/user', getLikedMoviesRouter)
 
         app.listen(serverPort, () => console.log(`Listening to port ${serverPort}`))
 
