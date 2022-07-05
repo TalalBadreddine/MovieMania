@@ -5,14 +5,12 @@ const manageBundlesAndUsers = require('../models/manageBundlesAndUsersSchema.js'
 const axios = require('axios')
 const dotenv = require('dotenv')
 const crypto = require('crypto');
-const nodemailer = require('nodemailer')
-const nexmo = require('nexmo')
 const modulesHelper = require('./modulesHelper.js')
 const manageBundlesAndUsersSchema = require('../models/manageBundlesAndUsersSchema.js')
 const hashType = 'sha1'
 const encodeAs = 'hex'
 
-dotenv.config({path: __dirname + '/../.env'})
+dotenv.config({path: __dirname + '/../../.env'})
 
 const {
     backdropPath,
@@ -111,7 +109,7 @@ async function getNumberOfTimeMoviesIsSubscribed(){
             let currentBundleMovies = allBundles[i].enrolledMoviesId
   
             for(let j = 0 ; j < currentBundleMovies.length ; j++){
-
+                                                                             
                 if(allMovies.has(currentBundleMovies[j])){
                    
                     allMovies.set(currentBundleMovies[j], allMovies.get(currentBundleMovies[j]) + 1)

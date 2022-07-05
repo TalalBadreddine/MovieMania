@@ -20,7 +20,7 @@ const {
 const getAllMovies = async (req, res) => {
 
     try{ 
-        let availbleBundles
+       let availbleBundles
 
         await extensions.getUserThisMonthBundles(session.currentUserInfo.email).then( (response) => {
             availbleBundles = response

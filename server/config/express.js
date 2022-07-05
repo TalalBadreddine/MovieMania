@@ -16,7 +16,6 @@ const displayDashBoardInfo = require('../controllers/admin/dashBoardController')
 const  loginRouter = require('../routes/loginRoute.js')
 const userSchema = require('../models/userSchema')
 const {validateUser,validateAdmin } = require('../middleware/authMiddleware.js')
-const modelsHelper = require('../helper/modulesHelper')
 const upload = multer();
 
 dotenv.config({path: __dirname + '/../../.env'})
@@ -33,7 +32,7 @@ const {
 } = process.env
 
 async function connectDB(){
-    const uri = `mongodb://${dbHost}:${dbPort}/${dbName}`
+    const uri = `mongodb+srv://talalbadreddine:Ta07762909@mycluster.bnshd.mongodb.net/?retryWrites=true&w=majority`
     await mongoose.connect(uri)
     console.log("Connected to db!")
 }
