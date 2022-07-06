@@ -2,9 +2,13 @@
 .allContent{
     background-color: var(--maniaBlack);
     color: var(--maniaWhite);
-    height: 2000px !important;
+    height: 100vh ;
     
 }
+html {
+  height: 100%;
+  background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+  overflow: hidden; }
   
   #stars {
     width: 1px;
@@ -58,9 +62,9 @@
     to {
       transform: translateY(-2000px); } }
 
-.titleContainer{
+/* .titleContainer{
     margin-top: 18%;
-}
+} */
 
 .getStartedButton{
   margin-left: 20% !important;
@@ -68,32 +72,20 @@
   color: var(--maniaWhite);
 }
 
-.emptyDiv{
-  height: 600px !important;
+
+.leftDivClass{
+  width: 33% !important;
+  height: 90%  !important;
+  margin-left: 5rem !important;
 }
 
-.signInDiv{
-  margin-top: 300px !important;
+.rightDivClass{
+  width: 45% !important;
+  height: 50%  !important;
+  margin-left: auto !important;
+  margin-right: 5rem !important;
 }
 
 .bigParent{
-  display: flex;
-  /* flex-direction: column; */
-}
-
-
-@media screen  and (max-width: 700px){
-  .allContent{
-    height: 1000px;
-  }
-
-  .emptyDiv{
-    height: 100px !important;
-  }
-
-  .bigParent{
-    gap: 50px;
-    display: flex;
-    flex-direction: column;
-  }
+  height: 100% !important;
 }

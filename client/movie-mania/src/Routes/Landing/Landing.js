@@ -1,72 +1,62 @@
-import React from "react";
+import React, { useState } from "react";
 import './LandingCss.css'
-import { Animator, ScrollContainer, ScrollPage, batch, Fade, FadeIn, FadeOut, Move, MoveIn, MoveOut, Sticky, StickyIn, StickyOut, Zoom, ZoomIn, ZoomOut } from "react-scroll-motion";
-
+import SignIn from "../../Components/SignInComponents/SignIn";
 
 
 const Landing = () => {
+    const [leftDivClass, setLeftDivClass] = useState("w-auto hidden h-1/2 mt-32")
+    const [middleDivClass, setMiddleDivClass] = useState("w-1/2  mx-auto titleContainer my-64")
+    const [rightDivClass, setRightDivClass] = useState("w-96  hidden mt-32")
+
+    const handleGetStarted = (e) => {
+        e.preventDefault()
+        setMiddleDivClass(middleDivClass + ' hidden')
+        setLeftDivClass(leftDivClass.replace('hidden',' leftDivClass'))
+        setRightDivClass(rightDivClass.replace('hidden', ' rightDivClass'))
+    }
+
     return (
-        <div className="allContent w-screen ">
+        <div className="allContent w-screen">
 
             <div id="stars"></div>
             <div id="stars2"></div>
             <div id="stars3"></div>
 
-            <ScrollContainer>
-
-                <ScrollPage page={0}>
-
-                    <Animator animation={Zoom()}>
-                        <div className="w-1/2  mx-auto titleContainer">
-
-                            <h1 className="text-8xl font-mono font-bold w-screen">Movie Mania</h1>
-
-                            <br />
-
-                            <p className="text-xl text-left font-mono mb-16"> Unlimited movies, TV shows,and more.Watch anywhere. Cancel anytime.</p>
-
-                            <div className="w-full getStartedButtonDivClass">
-
-                                <button className="font-mono py-2 px-4 rounded-full mt-10 getStartedButton w-1/2 h-20 text-2xl">Get Started</button>
-
-                            </div>
-
-                        </div>
-                    </Animator>
+            <div className="flex w-screen bigParent " >
 
 
+                <div className={leftDivClass} >
+                    <SignIn />
+                </div>
 
-                </ScrollPage>
-               
+                <div className={middleDivClass}>
 
-  
-                <ScrollPage page={1}>
-                    <div className="emptyDiv"></div>
+                    <h1 className="text-8xl font-mono font-bold w-screen">Movie Mania</h1>
 
-                    <div className="bigParent">
-                        <Animator animation={Move(-200, 0)}>
+                    <br />
 
-                            <div className="w-96 bg-green-400 h-96 ml-28 signIn ">
-                                <h3>I am the text</h3>
-                                <p>testing</p>
-                            </div>
+                    <p className="text-xl text-left font-mono mb-16"> Unlimited movies, TV shows,and more.Watch anywhere. Cancel anytime.</p>
 
-                        </Animator>
+                    <div className="w-full getStartedButtonDivClass">
 
-                        <Animator animation={Move(1300, 0)}>
+                        <button className="font-mono py-2 px-4 rounded-full mt-10 getStartedButton w-1/2 h-20 text-2xl" onClick={handleGetStarted}>Get Started</button>
 
-                            <div className="w-full bg-green-400 h-96 mr-28">
-                                <h3>I am the globe three js</h3>
-                                <p> testing</p>
-                            </div>
-                        </Animator>
                     </div>
 
+                </div>
 
-                </ScrollPage>
 
+                <div className={rightDivClass}>
+                    <h1 className="text-4xl text-center mb-10  font-semi">Who are we</h1>
+                    <p className="text-xl leading-loose font-mono">                                                                                       no-unused-vars
+                        Line 14:11:  'handleChange' is assigned a value but never used                                                                                                                                                                                                                                                                                                                  no-unused-vars
+                        Line 57:7:   The href attribute requires a valid value to be accessible. Provide a valid, navigable address as the href value. If you cannot provide a valid href, but still need the element to resemble a link, use a button and change it with appropriate styles. Learn more: https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/HEAD/docs/rules/anchor-is-valid.md  jsx-a11y/anchor-is-valid
+                        Line 14:11:  'handleChange' is assigned a value but never used                                                                                                                                                                                                                                                                                                                  no-unused-vars
+                        Line 14:11:  'handleChange' is assigned a value but never used                                                                                                                                                                                                                                                                                                                  no-unused-vars
 
-            </ScrollContainer>
+                    </p>
+                </div>
+            </div>
         </div>
 
     )

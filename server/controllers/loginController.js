@@ -25,7 +25,8 @@ const loginFunc = async (req, res, next) => {
         jwt.sign({user: user, role: 'admin'}, jwtSecret, (err, token) => {
             session.currentUserInfo = user
             res.cookie('jwt', token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 })
-            res.status(201).json(token)
+            res.json('admin')
+            // res.status(201).json(token)
         })
        
     }else{
@@ -43,12 +44,14 @@ const loginFunc = async (req, res, next) => {
             session.currentUserInfo = results[0]
             session.currentUserAllTimeBundles
             res.cookie('jwt', token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 })
-            res.status(201).json(token)
+            res.json(true)
+            // res.status(201).json(token)
         })
         
 
     }else{
-        res.status(404).send("User Not Found Please try again later")
+        return res.json(false)
+        // res.status(404).send("User Not Found Please try again later")
     }  
 }}
 
