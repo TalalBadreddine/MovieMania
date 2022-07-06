@@ -89,3 +89,23 @@ html {
 .bigParent{
   height: 100% !important;
 }
+
+@media screen and (max-width:700px) {
+
+  .bigParent{
+    flex-direction: column;
+    margin-top: -10% !important;
+  }
+
+  .leftDivClass{
+    width: 80% !important;
+    height: 90%  !important;
+    margin: auto;
+  }
+
+  .rightDivClass{
+    width: 80% !important;
+    height: 90%  !important;
+    margin: auto;
+  }
+}
