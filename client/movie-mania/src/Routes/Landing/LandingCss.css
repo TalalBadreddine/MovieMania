@@ -1,12 +1,10 @@
 
 .allContent{
     background-color: var(--maniaBlack);
-    color: var(--maniaWhite)
+    color: var(--maniaWhite);
+    height: 2000px !important;
+    
 }
-html {
-    height: 100%;
-    background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
-    overflow: hidden; }
   
   #stars {
     width: 1px;
@@ -68,4 +66,34 @@ html {
   margin-left: 20% !important;
   background-color: var(--maniaGreen);
   color: var(--maniaWhite);
+}
+
+.emptyDiv{
+  height: 600px !important;
+}
+
+.signInDiv{
+  margin-top: 300px !important;
+}
+
+.bigParent{
+  display: flex;
+  /* flex-direction: column; */
+}
+
+
+@media screen  and (max-width: 700px){
+  .allContent{
+    height: 1000px;
+  }
+
+  .emptyDiv{
+    height: 100px !important;
+  }
+
+  .bigParent{
+    gap: 50px;
+    display: flex;
+    flex-direction: column;
+  }
 }

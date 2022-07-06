@@ -10,7 +10,6 @@ function App() {
  
       <Routes>
           <Route index path='/' element={<Landing />} />
-
       </Routes>
     </div>
   );
