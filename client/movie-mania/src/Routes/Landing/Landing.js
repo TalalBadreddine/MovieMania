@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import './LandingCss.css'
 import SignIn from "../../Components/SignInComponents/SignIn";
 
-
 const Landing = () => {
-    const [leftDivClass, setLeftDivClass] = useState("w-auto hidden h-1/2 mt-32")
+    const [leftDivClass, setLeftDivClass] = useState("w-auto hidden h-1/2 mt-36")
     const [middleDivClass, setMiddleDivClass] = useState("w-1/2  mx-auto titleContainer my-64")
-    const [rightDivClass, setRightDivClass] = useState("w-96  hidden mt-32")
+    const [rightDivClass, setRightDivClass] = useState("w-96  hidden mt-36")
 
     const handleGetStarted = (e) => {
         e.preventDefault()
@@ -47,7 +46,7 @@ const Landing = () => {
 
 
                 <div className={rightDivClass}>
-                    <h1 className="text-4xl text-center mb-10  font-semi">Who are we</h1>
+                    <h1 className="text-2xl text-center mb-10 ">Who are we</h1>
                     <p className="text-xl leading-loose font-mono">                                                                                       no-unused-vars
                         Line 14:11:  'handleChange' is assigned a value but never used                                                                                                                                                                                                                                                                                                                  no-unused-vars
                         Line 57:7:   The href attribute requires a valid value to be accessible. Provide a valid, navigable address as the href value. If you cannot provide a valid href, but still need the element to resemble a link, use a button and change it with appropriate styles. Learn more: https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/HEAD/docs/rules/anchor-is-valid.md  jsx-a11y/anchor-is-valid

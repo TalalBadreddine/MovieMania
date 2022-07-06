@@ -1,6 +1,8 @@
 import { useState } from "react"
 import './signInCss.css'
 import {BiError} from 'react-icons/bi'
+import SignInWithGoogle from "./SignInWithGoogle"
+import {Link} from 'react-router-dom'
 
 let userObjectSkeleton = {
     email: '',
@@ -67,7 +69,7 @@ const SignIn = () => {
             const isUser = content 
             ? alert('Redirect Home') 
             : setErrorObject({...errorObject, ['errorContent']: 'User does not exist', ['errorClass']: errorClass.replace('hidden', '')})
-            
+
           })();
 
     }
@@ -95,7 +97,7 @@ const SignIn = () => {
                 </div>
 
                 <div className="text-black mb-10">
-                    <span>Don't have a account ? <a className="text-blue-700 hover:text-blue-300 hover:cursor-pointer">Register</a> </span>
+                    <span>Don't have a account ? <Link to = "/register"className="text-blue-700 hover:text-blue-300 hover:cursor-pointer">Register</Link> </span>
                     <br></br>
                     <span className={errorClass}><span className="animate-bounce mr-1"><BiError size={20}></BiError></span><span className="text-red-500 text-sm ml-1">{errorContent}</span></span>
                 </div>
@@ -104,9 +106,10 @@ const SignIn = () => {
                 <button className=" w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="Submit">
                         Sign In
                     </button>
-                    <button className=" w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-8" type="button">
+                    {/* <button className=" w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-8" type="button">
                      Sign In With Google
-                    </button>
+                    </button> */}
+                    <SignInWithGoogle className="googleButton"></SignInWithGoogle>
                 </div>
 
                 <div className="mt-6">
