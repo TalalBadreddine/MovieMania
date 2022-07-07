@@ -1,7 +1,7 @@
 import {Routes, Route} from 'react-router-dom'
 import Landing from '../src/Routes/Landing/Landing';
 import './CommunColors.css'
-import Register from './Routes/Register/Register';
+import Bundles from './Routes/Bundles/Bundles';
 
 function App() {
 
@@ -9,10 +9,11 @@ function App() {
     <div className="App">
  
       <Routes>
-          <Route index path='/' element={<Landing />}>
+        
+          <Route index path='/' element={<Landing />}/>
 
-          </Route>
-          <Route path='/Register' element={<Register />}/>
+          <Route path = 'payments' element = {<Bundles />} />
+
       </Routes>
     </div>
   );

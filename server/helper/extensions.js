@@ -130,6 +130,20 @@ async function getNumberOfTimeMoviesIsSubscribed(){
 }
 
 
+async function getAllBundles(){
+    try{
+
+        const results = await bundleSchema.find()
+
+        return results
+
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
 async function getAllBundlesThatUserCanSubscribeTo(userEmail, onlyId = false){
     try{
         let currentAvailbleBundle
@@ -149,7 +163,7 @@ async function getAllBundlesThatUserCanSubscribeTo(userEmail, onlyId = false){
        let userCurrentBundlesId = userCurrentBundles.map((bundle) => bundle.bundleId)
        let allBundles = await bundleSchema.find()
        let filterdBundles = []
-
+       
        for(let i = 0 ; i < allBundles.length ; i++){
         if(userCurrentBundlesId.includes(`${allBundles[i]._id}`))continue
         filterdBundles.push(allBundles[i])
@@ -217,6 +231,7 @@ async function getMovieLimitByBundleId(currentBundleId){
         },{
             movieLimit: 1
         })
+ 
         return movieLimit
     }
     catch(err){
@@ -359,7 +374,7 @@ async function existingUserSubscribeToBundle(userEmail, bundleId){
 }
 
 
-async function newUserSubscribeToBundle(userEmail, bundleId){
+async function newUserSubscribeToBundle(userEmail, bundleid){
     try{
         let user 
         await getUserInfo(userEmail).then((response) => {
@@ -369,13 +384,13 @@ async function newUserSubscribeToBundle(userEmail, bundleId){
         const currentMonthDate = modulesHelper.getCurrentDate()
         let numberOfMoviesLeft
 
-         await getMovieLimitByBundleId(bundleId).then( (results) => {
+         await getMovieLimitByBundleId(bundleid).then( (results) => {
             numberOfMoviesLeft = results[0].movieLimit
          })
-
+      
         let element = {
             userId: user._id,
-            bundleId: bundleId,
+            bundleId: bundleid,
             startBundleDate: currentMonthDate,
             endBundleDate: nextMonthDate,
             numberOfMoviesLeft: parseInt(numberOfMoviesLeft)
@@ -490,5 +505,6 @@ module.exports = {
     getUserCurrentMonthBundlesWithNonOverLimitMovies,
     getNumberOfTimeMoviesIsSubscribed,
     getThisMonthEnrolledMovies,
+    getAllBundles,
     hashString  
 }

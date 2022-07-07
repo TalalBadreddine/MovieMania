@@ -3,9 +3,9 @@ import './LandingCss.css'
 import SignIn from "../../Components/SignInComponents/SignIn";
 
 const Landing = () => {
-    const [leftDivClass, setLeftDivClass] = useState("w-auto hidden h-1/2 mt-36")
+    const [leftDivClass, setLeftDivClass] = useState("w-auto hidden h-1/2 mt-28")
     const [middleDivClass, setMiddleDivClass] = useState("w-1/2  mx-auto titleContainer my-64")
-    const [rightDivClass, setRightDivClass] = useState("w-96  hidden mt-36")
+    const [rightDivClass, setRightDivClass] = useState("w-96  hidden mt-28")
 
     const handleGetStarted = (e) => {
         e.preventDefault()
