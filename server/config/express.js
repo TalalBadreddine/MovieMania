@@ -67,11 +67,12 @@ async function startServer(){
         // Insert Routest here
 
         app.get('/success', (req, res) => {
-            
+          
             let currentUserId = req.cookies.uuid
-            let currentUser = req.session[currentUserId][0]
+            let userExist = req.session[currentUserId]
             
-            if(currentUserId){
+            if(userExist){
+                let currentUser = req.session[currentUserId][0]
 
                 let user = {
                     firstName: currentUser.firstName,
@@ -85,16 +86,16 @@ async function startServer(){
             extensions.userAlreadyExist(user.email).then( async (result) => {
                 if(result){
                     await extensions.existingUserSubscribeToBundle(user.email, user.bundlesId[ user.bundlesId.length - 1])
-                    res.send("exist")
+                    res.json("done")
 
                 }else{
                       await extensions.addToDb(userSchema, user)
                       await extensions.newUserSubscribeToBundle(user.email, user.bundlesId[ user.bundlesId.length - 1])
-                      res.send('created')
+                      res.json('done')
                 } })
       
          }else {
-            res.status(401).json("forbidden")
+            res.json("forbidden")
          }
          
         })

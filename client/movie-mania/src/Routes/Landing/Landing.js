@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import './LandingCss.css'
 import SignIn from "../../Components/SignInComponents/SignIn";
+import { Outlet } from "react-router-dom";
 
 const Landing = () => {
     const [leftDivClass, setLeftDivClass] = useState("w-auto hidden h-1/2 mt-28")
@@ -16,7 +17,7 @@ const Landing = () => {
 
     return (
         <div className="allContent w-screen">
-
+            
             <div id="stars"></div>
             <div id="stars2"></div>
             <div id="stars3"></div>
@@ -56,6 +57,7 @@ const Landing = () => {
                     </p>
                 </div>
             </div>
+            <Outlet></Outlet>
         </div>
 
     )

@@ -102,7 +102,7 @@ const makePayment = async (req, res) => {
           payment_method_types: ["card"],
           mode: "payment",
           line_items: [bundleToBuy],
-          success_url: 'http://localhost:5001/success',
+          success_url: 'http://localhost:3000/success',
           cancel_url: 'http://localhost:3000/',
         })
         
