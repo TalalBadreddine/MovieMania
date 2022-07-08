@@ -7,11 +7,12 @@
 }
 
 .SubscribeButton:hover{
-    color: var(--maniaWhite);
-    background-color: var(--maniaBlue);
+    /* color: var(--maniaWhite); */
+    /* background-color: var(--maniaBlue); */
 }
 
 .SubscribeButton{
     color: var(--maniaBlue);
     border-color: var(--maniaBlue);
 }
+

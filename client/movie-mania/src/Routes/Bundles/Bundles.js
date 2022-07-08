@@ -14,11 +14,9 @@ const Bundles = () => {
             await fetch('/register/payments')
             .then(async (resp) => await resp.json())
             .then(async (data) => {
-                await setDataFetched(data)
+                await setDataFetched(data.sort(function(a,b){return a.price - b.price}))
             })
-
         }
-
          getAllBundles()
 
     }, [])
@@ -32,10 +30,10 @@ const Bundles = () => {
 
     return(
         <div>
-            <h1 className="text-5xl text-center mt-10">Our Bundles</h1>
+            <h1 className="text-5xl text-center mt-10 font-mono">Our Bundles</h1>
             <div className="flex gap-10 mt-2 mx-12 h-screen flex-wrap">
             {dataFetched.map((data, index) => {
-            return <Bundle info ={data} key={index} ></Bundle>
+            return <Bundle info ={data} key={index} iconIndex={index} ></Bundle>
         })}
 
             </div>
