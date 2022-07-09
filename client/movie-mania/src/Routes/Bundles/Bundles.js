@@ -14,6 +14,9 @@ const Bundles = () => {
             await fetch('/register/payments')
             .then(async (resp) => await resp.json())
             .then(async (data) => {
+                if(data == 'forbidden'){
+                    return navigate('/')
+                }
                 await setDataFetched(data.sort(function(a,b){return a.price - b.price}))
             })
         }
