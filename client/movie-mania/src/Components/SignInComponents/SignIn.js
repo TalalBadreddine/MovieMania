@@ -97,9 +97,10 @@ const SignIn = () => {
               },
               body: JSON.stringify({email: email, password: password})
             });
+            
             const content = await response.json();
-
-            if(content.toLowerCase == 'admin')alert('Redirect To Admin Page')
+           
+            if(content == 'admin')return navigate('admin/dashboard')
 
             const isUser = content 
             ? alert('Redirect Home') 

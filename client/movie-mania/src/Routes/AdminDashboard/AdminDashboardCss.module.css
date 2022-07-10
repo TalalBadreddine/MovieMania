@@ -1,0 +1,29 @@
+.AllContainer{
+    background-color: var(--maniaBlack);
+}
+
+.graph{
+    background-color: rgba(255, 255, 255, 0.010) !important;
+}
+
+.currentTitle{
+    padding: 1rem;
+    text-shadow:
+    0 0 10px #fff,
+    0 0 17px #fff,
+    0 0 0px #0fa; 
+     ;
+ box-shadow:0px 2px 0px #fff;
+}
+
+.currentTitle:hover{
+    cursor: pointer;
+}
+
+.nothing{
+    padding: 1rem;
+}
+
+.nothing:hover{
+    cursor: pointer;
+}

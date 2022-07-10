@@ -78,6 +78,20 @@ async function getAllMoviesId(){
 }
 
 
+async function getAllUsers(){
+    try{
+
+        let results = await userSchema.find()
+
+        return results
+
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
 async function getMovieDetailById(id){
     let results 
 
@@ -101,28 +115,99 @@ async function getMovieDetailById(id){
 
 // <-------- DataBase -------->
 
+
+async function getNumberofBundlesSubscribed(){
+    try{
+        let results = await manageBundlesAndUsers.find()
+        let arrOfAllBundlesSubscribed = []
+
+        for(let i = 0 ; i < results.length ; i++){
+            let currentBundle = results[i]
+
+            let currentObject= {
+                registerDate: currentBundle['startBundleDate'],
+                bundleTitle: ''
+            }
+
+            await getBundleNameById(currentBundle['bundleId']).then((data) => {
+                console.log(data[0]['title'])
+                currentObject.bundleTitle = data[0]['title']
+            })
+
+            arrOfAllBundlesSubscribed.push(currentObject)
+
+        }
+        
+        return arrOfAllBundlesSubscribed
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
+async function getBundleNameById(bundleId){
+    try{
+            let results = await bundleSchema.find({
+                _id: bundleId
+            },{
+                title:1
+            })
+
+            return results
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
 async function getNumberOfTimeMoviesIsSubscribed(){
     try{
-        let allMovies = new Map()
+
+        let allMovies = {}
         let allBundles = await manageBundlesAndUsersSchema.find()
         
         for(let i = 0 ; i < allBundles.length;  i++){
             let currentBundleMovies = allBundles[i].enrolledMoviesId
+
+            console.log(allBundles[i]['startBundleDate'])
   
             for(let j = 0 ; j < currentBundleMovies.length ; j++){
                                                                              
-                if(allMovies.has(currentBundleMovies[j])){
+                if(allMovies[currentBundleMovies[j]] != undefined){
                    
-                    allMovies.set(currentBundleMovies[j], allMovies.get(currentBundleMovies[j]) + 1)
+                    allMovies[currentBundleMovies[j]].count =  allMovies[currentBundleMovies[j]].count + 1
 
                 }else{
-                    console.log(currentBundleMovies[j])
-                    allMovies.set(currentBundleMovies[j], 1)
+
+                    let details
+
+                    await getMovieDetailById(currentBundleMovies[j]).then((data) => {
+                     details = data
+                    })
+ 
+                     allMovies[currentBundleMovies[j]] =  {
+                         count: 1,
+                         movieDetails: details
+                     }
 
                 }
             }
         }
-        return allMovies
+
+        let moviesArr = []
+
+        for(let i of Object.keys(allMovies)){
+            moviesArr.push(
+            {
+                count: allMovies[i].count,
+                details: allMovies[i].movieDetails
+            }
+            )
+        }
+
+        return moviesArr
     }
     catch(err){
         console.log(err.message)
@@ -505,6 +590,8 @@ module.exports = {
     getUserCurrentMonthBundlesWithNonOverLimitMovies,
     getNumberOfTimeMoviesIsSubscribed,
     getThisMonthEnrolledMovies,
+    getNumberofBundlesSubscribed,
     getAllBundles,
+    getAllUsers,
     hashString  
 }

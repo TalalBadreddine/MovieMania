@@ -1,13 +1,29 @@
 const extensions = require('../../helper/extensions.js')
 
 const displayDashBoardInfo = async (req, res) => {
-    let moviesStat
+   
+
+    let statisticsObject = {
+
+        moviesStatistics: '',
+        allUseres: '',
+        bundleStatistics: ''
+
+    }
 
     await extensions.getNumberOfTimeMoviesIsSubscribed().then((response) => {
-        moviesStat = response
+        statisticsObject['moviesStatistics'] = response
     })
-    console.log(moviesStat)
-    return res.status(200).json("noice")
+    
+    await extensions.getAllUsers().then((response) => {
+        statisticsObject['allUsers'] = response
+    })
+
+    await extensions.getNumberofBundlesSubscribed().then((response) => {
+        statisticsObject['bundleStatistics'] = response
+    })
+
+    return res.json(statisticsObject)
 }
 
 module.exports = displayDashBoardInfo
