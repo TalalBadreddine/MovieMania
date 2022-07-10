@@ -126,12 +126,13 @@ async function getNumberofBundlesSubscribed(){
 
             let currentObject= {
                 registerDate: currentBundle['startBundleDate'],
-                bundleTitle: ''
+                bundleTitle: '',
+                bundlePrice: 0
             }
 
-            await getBundleNameById(currentBundle['bundleId']).then((data) => {
-                console.log(data[0]['title'])
+            await getBundleNameAndPriceById(currentBundle['bundleId']).then((data) => {
                 currentObject.bundleTitle = data[0]['title']
+                currentObject.bundlePrice = data[0]['price']
             })
 
             arrOfAllBundlesSubscribed.push(currentObject)
@@ -146,12 +147,13 @@ async function getNumberofBundlesSubscribed(){
 }
 
 
-async function getBundleNameById(bundleId){
+async function getBundleNameAndPriceById(bundleId){
     try{
             let results = await bundleSchema.find({
                 _id: bundleId
             },{
-                title:1
+                title:1,
+                price:1
             })
 
             return results
@@ -170,8 +172,6 @@ async function getNumberOfTimeMoviesIsSubscribed(){
         
         for(let i = 0 ; i < allBundles.length;  i++){
             let currentBundleMovies = allBundles[i].enrolledMoviesId
-
-            console.log(allBundles[i]['startBundleDate'])
   
             for(let j = 0 ; j < currentBundleMovies.length ; j++){
                                                                              

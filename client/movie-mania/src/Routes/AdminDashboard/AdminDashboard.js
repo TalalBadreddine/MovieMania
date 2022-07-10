@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import styles from './AdminDashboardCss.module.css'
 import axios from 'axios'
 import TopMoviesAdmin from '../../Components/TopMoviesAdmin/TopMoviesAdmin';
+import Loading from '../../Components/Loading/Loading'
 
 let dateIntervalSkeleton = {
     startDate: new Date().toLocaleDateString(),
@@ -23,6 +24,10 @@ function AdminDashboard() {
     const [numberOfNewUsers, setNumberOfNewUsers] = useState(0)
 
     const [topMovies, setTopMovies] = useState('')
+
+    const [bundlesprofit, setBundlesProfit] = useState(0)
+
+    const [chartType, setChartType] = useState('doughnut')
 
     useEffect(() => {
 
@@ -49,7 +54,7 @@ function AdminDashboard() {
         let target = event.target
 
         setCurrentPage(target.id)
-        
+
         let pagesToDateMap = {
 
             0: getdate(0),
@@ -60,27 +65,27 @@ function AdminDashboard() {
 
         }
 
-
         setDateInterval({ ...dateInterval, ['startDate']: pagesToDateMap[target.id] })
-
     }
 
     useEffect(() => {
-        if(currentPage == -1)return
- 
+        if (currentPage == -1) return
 
-         manageBundleStatistics()
 
-         manageNbOfNewUsers()
+        manageBundleStatistics()
 
-         manageTopMovies()
+        manageNbOfNewUsers()
 
-    },[currentPage])
+        manageTopMovies()
+
+
+    }, [currentPage])
+
 
     const manageTopMovies = () => {
         let allMoviesData = fetchedData['moviesStatistics']
 
-         allMoviesData = allMoviesData.sort(function(a,b){
+        allMoviesData = allMoviesData.sort(function (a, b) {
             return (parseInt(b.count) - parseInt(a.count))
         })
 
@@ -88,8 +93,12 @@ function AdminDashboard() {
             return <TopMoviesAdmin key={index} count={movie.count} details={movie.details} />
         })
 
-         setTopMovies(arrOfDom)
-        
+        setTopMovies(arrOfDom)
+
+    }
+
+    const handleChartTypeChange = (event) => {
+        setChartType(event.target.id)
     }
 
     const manageNbOfNewUsers = async () => {
@@ -115,9 +124,13 @@ function AdminDashboard() {
         let allBundles = fetchedData['bundleStatistics']
         let bundlesArr = []
         let bundlesCount = {}
+        let profit = 0
 
         for (let i = 0; i < allBundles.length; i++) {
             if (timeDifferenceBetweenFirstDateAndSecondInDays(allBundles[i]['registerDate'], dateInterval.startDate) >= 0) {
+
+                profit += parseFloat(allBundles[i].bundlePrice)
+
                 let bundleName = allBundles[i]['bundleTitle']
 
                 if (bundlesCount[bundleName] == undefined) {
@@ -131,13 +144,22 @@ function AdminDashboard() {
                 }
             }
         }
-
+        setBundlesProfit(profit.toFixed(2))
         setBundlesStatistics(bundlesCount)
     }
 
+    const setChartTypeStyle = (type) => {
+        return chartType == type ? styles.currentChartType : styles.notCurrentChartType
+    }
+
+    if(!fetchedData){
+        return(
+            <Loading/>
+        )
+    }
 
     return (
-        <div className={["w-full h-screen", styles.AllContainer].join(' ')}>
+        <div className={["w-full", styles.AllContainer].join(' ')}>
             <div className={['flex justify-center space-x-20 text-white py-2']}>
                 <h1 className={setStyle(0)} onClick={handleDateChange} id='0' >Today</h1>
                 <h1 className={setStyle(1)} onClick={handleDateChange} id='1' >This week</h1>
@@ -151,7 +173,22 @@ function AdminDashboard() {
                     <h1 className='text-center text-2xl'>Subscribed Bundles</h1>
                     {Object.values(bundlesStatistics).length > 0 ?
                         <div>
-                            <CustomChart graphType={'doughnut'} graphTitle="" graphData={Object.values(bundlesStatistics)} graphLabels={Object.keys(bundlesStatistics)} ></CustomChart>
+                            <div className='h-1/3'>
+
+                                <CustomChart graphType={chartType} graphTitle="" graphData={Object.values(bundlesStatistics)} graphLabels={Object.keys(bundlesStatistics)} ></CustomChart>
+                            
+                            </div>
+
+                            <div className='flex justify-evenly mt-16 h-1/3'>
+
+                                <h1 id="pie" className={setChartTypeStyle('pie') } onClick={handleChartTypeChange} >Pie</h1>
+                                <h1 id='line' className={setChartTypeStyle('line') } onClick={handleChartTypeChange} >Line</h1>
+                                <h1 id='bar' className={setChartTypeStyle('bar') } onClick={handleChartTypeChange}  >Bar</h1>
+                                <h1 id='doughnut' className={setChartTypeStyle('doughnut') } onClick={handleChartTypeChange}  >doughnut</h1>
+
+                            </div>
+
+
                         </div>
                         : <h1 className='text-5xl text-center mt-20 ml-2 ' >No Bundles </h1>}
 
@@ -166,9 +203,11 @@ function AdminDashboard() {
 
                     </div>
 
-                    <div className={["w-auto h-64 rounded-xl text-white p-2 mt-10", styles.graph].join(' ')} >
+                    <div className={["w-auto h-64 rounded-xl text-white p-1 mt-10", styles.graph].join(' ')} >
+
                         <h1 className='text-3xl p-2'>Top Movies:</h1>
-                        <div className='overflow-scroll w-auto h-3/4'>
+
+                        <div className='overflow-scroll w-auto h-3/4 p-3'>
                             {topMovies}
                         </div>
 
@@ -176,12 +215,39 @@ function AdminDashboard() {
 
                 </div>
 
-    
-                <div className={["w-64 h-auto rounded-xl text-white mt-10 p-2 pt-4", styles.graph].join(' ')} >
-                    <h1 className='text-center text-2xl'>Total Profit:</h1>
+
+                <div className={["w-64 h-auto rounded-xl text-white mt-2 p-4 ", styles.graph].join(' ')} >
+
                     {Object.values(bundlesStatistics).length > 0 ?
-                        <div>
-                            <h1>$2,000</h1>
+
+                        <div className='h-full'>
+
+                            <div className='h-1/3  text-center'>
+
+                                <h1 className='text-3xl font-bold'>Total Profit:</h1>
+
+                                <h1 className='text-3xl mt-6'>${bundlesprofit}</h1>
+
+                            </div>
+
+                            <div className='h-1/3 text-center'>
+
+                                <h1 className='text-3xl mb-8 font-bold'>Details:</h1>
+
+                                <div className='w-full '>
+
+                                    {Object.keys(bundlesStatistics).map((value) => {
+                                        return (<h1 className='text-center w-auto mt-3'> <span className='text-2xl'>{value}</span>  <span className='m-2 text-2xl'>x</span> <span className='text-2xl'>{bundlesStatistics[value]}</span> </h1>)
+                                    })}
+
+                                </div>
+
+                            </div>
+
+                            <div className='text-center mt-24'>
+                                <h1 className='text-2xl hover:font-bold hover:cursor-pointer' onClick={() => window.open('https://dashboard.stripe.com/test/payments')}>Check All Payments</h1>
+                            </div>
+
                         </div>
                         : <h1 className='text-5xl text-center mt-20 ml-2 ' >No Profit </h1>}
 

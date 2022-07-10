@@ -1,9 +1,10 @@
 .AllContainer{
     background-color: var(--maniaBlack);
+    height: 100vh ;
 }
 
 .graph{
-    background-color: rgba(255, 255, 255, 0.010) !important;
+    background-color: rgba(255, 255, 255, 0.015) !important;
 }
 
 .currentTitle{
@@ -26,4 +27,15 @@
 
 .nothing:hover{
     cursor: pointer;
+}
+
+.currentChartType{
+    cursor: pointer;
+    font-family: bold;
+    font-size: 1.3rem;
+}
+
+.notCurrentChartType{
+    cursor: pointer;
+    font-size: 1rem;
 }

@@ -3,7 +3,6 @@ import { Chart } from 'react-chartjs-2';
 
 const CustomChart = (props) =>{
     const {graphType, graphTitle, graphData , graphLabels} = props
-    console.log(graphType,graphTitle,graphData)
     return(
         <Chart type = {graphType} data={{                                          
             labels: graphLabels,

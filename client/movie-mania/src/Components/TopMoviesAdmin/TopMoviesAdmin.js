@@ -7,7 +7,7 @@ const TopMoviesAdmin = (prorps) => {
     
         <div className="flex mb-5 w-5/6">
 
-            <img src={`https://image.tmdb.org/t/p/w1280/${details['poster_path']}`} width='100px'></img>
+            <img src={`https://image.tmdb.org/t/p/w1280/${details['poster_path']}`} width='120px'></img>
 
             <div className="p-2">
             <h1 className="text-xl m-2">{details['original_title']}</h1>
