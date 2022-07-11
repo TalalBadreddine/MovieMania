@@ -157,6 +157,7 @@ function AdminDashboard() {
         )
     }
       
+    // TODO use can change chart Type
 
     let element = (
 
@@ -175,7 +176,6 @@ function AdminDashboard() {
             <h1 id='doughnut' className={setChartTypeStyle('doughnut') } onClick={handleChartTypeChange}  >doughnut</h1>
 
         </div>
-
 
     </div>
     )
