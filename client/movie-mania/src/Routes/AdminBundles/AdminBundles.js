@@ -1,6 +1,7 @@
 import styles from './AdminBundlesCss.module.css'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import Notification from '../../Components/Notification/Notification'
 
 
 let skeletonOfCurrentBundle = {
@@ -12,7 +13,13 @@ let skeletonOfCurrentBundle = {
     btn: 'Add',
     id: ''
 
+}
 
+let errorSkeleton = {
+
+    title: 'Error',
+    content: '',
+    hidden: true
 }
 
 const AdminBundles = () => {
@@ -24,6 +31,8 @@ const AdminBundles = () => {
     const [bundlesData, setBundlesData] = useState()
 
     const [searchInput, setSearchInput] = useState('')
+
+    const [errorDetails, setErrorsDetails] = useState(errorSkeleton)
 
     const getTableData = async () => {
 
@@ -116,7 +125,7 @@ const AdminBundles = () => {
         let typeOfHandling = arrOfInfo[0]
         let titleOfBundle = arrOfInfo[1]
 
-        if (typeOfHandling == 'delete'){
+        if (typeOfHandling == 'delete') {
 
             alert('Are u sure u want to delete ?')
 
@@ -131,13 +140,13 @@ const AdminBundles = () => {
             return
         }
 
-        if(typeOfHandling == 'edit'){
+        if (typeOfHandling == 'edit') {
 
             let currentBundleTarget = bundlesData.filter((bundle) => bundle.title == titleOfBundle)[0]
 
-            setCurrentBundle({...currentBundle, ['price']: currentBundleTarget.price, ['title']: currentBundleTarget.title, ['limit']: currentBundleTarget.movieLimit, ['id']: currentBundleTarget._id, ['titleOfContainer']: 'Edit Bundle', ['btn']: 'Edit'})
+            setCurrentBundle({ ...currentBundle, ['price']: currentBundleTarget.price, ['title']: currentBundleTarget.title, ['limit']: currentBundleTarget.movieLimit, ['id']: currentBundleTarget._id, ['titleOfContainer']: 'Edit Bundle', ['btn']: 'Edit' })
         }
-        
+
     }
 
     const handleCurrentBundleChange = (event) => {
@@ -145,44 +154,44 @@ const AdminBundles = () => {
         let name = event.target.name
         let val = event.target.value
 
-        setCurrentBundle({...currentBundle, [name]: val})
+        setCurrentBundle({ ...currentBundle, [name]: val })
 
     }
 
     const handleAddNewBundle = () => {
-        setCurrentBundle({...currentBundle, ['price']: '', ['title']: '', ['limit']: '', ['id']: '', ['titleOfContainer']: 'Add bundle', ['btn']: 'Add'})
+        setCurrentBundle({ ...currentBundle, ['price']: '', ['title']: '', ['limit']: '', ['id']: '', ['titleOfContainer']: 'Add bundle', ['btn']: 'Add' })
     }
 
     const handleAddEditBundleBtn = (event) => {
 
-        if(currentBundle.btn == 'Add'){
-            
-            if(!currentBundle.title){
-                alert('Title Empty')
+
+
+            if (!currentBundle.title) {
+                setErrorsDetails({ ...errorDetails, ['content']: 'Title is Empty !', ['hidden']: false })
                 return
             }
 
-            if(parseInt(currentBundle.price) <= 0){
-                alert('Edit price')
+            if (parseInt(currentBundle.price) <= 0) {
+                setErrorsDetails({ ...errorDetails, ['content']: 'Edit Price !', ['hidden']: false })
                 return
             }
 
-            if(parseInt(currentBundle.limit) <= 0){
-                alert('Edit limit')
+            if (parseInt(currentBundle.limit) <= 0 || currentBundle.limit == '') {
+                setErrorsDetails({ ...errorDetails, ['content']: 'Edit Limit !', ['hidden']: false })
                 return
             }
 
             let bundlesWithSameName = fetchedData.filter((bundle) => bundle.title == currentBundle.title)
 
-            if(currentBundle.btn == 'Add'){
+            if (currentBundle.btn == 'Add') {
 
-                if(bundlesWithSameName.length >= 1){
-                    //TODO replace all alert with proper notification
-                    alert('Bundle With the same name already exist')
+
+                if (bundlesWithSameName.length >= 1) {
+                    setErrorsDetails({ ...errorDetails, ['content']: 'Bundle With the same name already exist !', ['hidden']: false })
                     return
                 }
 
-                axios.post('/admin/bundles/',{
+                axios.post('/admin/bundles/', {
 
                     title: currentBundle.title,
                     movieLimit: currentBundle.limit,
@@ -191,27 +200,29 @@ const AdminBundles = () => {
                 }).then((data) => {
                     console.log(data.status)
 
-                    if(data.status == 200){
+                    if (data.status == 200) {
                         getTableData()
                     }
 
                 })
 
-            }else{
+            } else {
 
-                if(bundlesWithSameName.length == 1 && bundlesWithSameName[0]._id != currentBundle.id  ){
-                    alert('Bundle With the same name already exist')
+
+
+                if (bundlesWithSameName.length == 1 && bundlesWithSameName[0]._id != currentBundle.id) {
+                    setErrorsDetails({ ...errorDetails, ['content']: 'Bundle With the same name already exist', ['hidden']: false })
                     return
                 }
 
-                axios.patch(`/admin/bundles/${currentBundle.id}`,{
+                axios.patch(`/admin/bundles/${currentBundle.id}`, {
 
                     title: currentBundle.title,
                     movieLimit: currentBundle.limit,
                     price: currentBundle.price
 
                 }).then((data) => {
-                    if(data.status == 200){                                    
+                    if (data.status == 200) {
                         getTableData()
                     }
                 })
@@ -219,8 +230,11 @@ const AdminBundles = () => {
             }
 
 
-        }
 
+    }
+
+    const handleDoneBtn = () => {
+        setErrorsDetails({ ...errorDetails, ['hidden']: true })
     }
 
     return (
@@ -233,6 +247,7 @@ const AdminBundles = () => {
             <div className={['mt-14  h-3/4', styles.contentOfThePage].join(' ')}>
 
                 <div className='text-2xl text-white ml-2 w-2/6 h-auto mb-1'>
+                    <Notification content={errorDetails.content} title={errorDetails.title} hidden={errorDetails.hidden} handleDoneBtn={handleDoneBtn} ></Notification>
                     <form>
                         <div className="flex">
                             <div className=" xl:w-96">
@@ -307,21 +322,21 @@ const AdminBundles = () => {
                                 <label className="block text-white text-2xl mb-2">
                                     Limit:
                                 </label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="number" placeholder="Limit" name="limit" onChange={handleCurrentBundleChange} value={currentBundle.limit}  required />
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="number" placeholder="Limit" name="limit" onChange={handleCurrentBundleChange} value={currentBundle.limit} required />
                             </div>
 
                             <div className={currentBundle.btn == 'Edit' ? 'mb-2' : 'mb-10'}>
                                 <label className="block text-white text-2xl mb-2">
                                     Price:
                                 </label>
-                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="number" placeholder="Price in usd" name="price" onChange={handleCurrentBundleChange} value={currentBundle.price}  required />
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="number" placeholder="Price in usd" name="price" onChange={handleCurrentBundleChange} value={currentBundle.price} required />
                             </div>
 
-                            {currentBundle.btn == 'Edit' && 
+                            {currentBundle.btn == 'Edit' &&
                                 <button className='mb-7 w-auto font-bold px-2 rounded-full m-auto text-center text-white font-normal text-blue-600 hover:underline hover:cursor-pointer text-md' onClick={handleAddNewBundle}>Add new bundle</button>
                             }
 
-                            <div className={[' w-32 font-bold py-2 px-10 text-xl rounded-full m-auto text-center text-white', styles.addEditBundleBtn].join(' ') } >
+                            <div className={[' w-32 font-bold py-2 px-10 text-xl rounded-full m-auto text-center text-white', styles.addEditBundleBtn].join(' ')} >
                                 <button onClick={handleAddEditBundleBtn}>{currentBundle.btn}</button>
                             </div>
 
