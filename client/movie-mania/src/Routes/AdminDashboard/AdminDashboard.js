@@ -37,7 +37,6 @@ function AdminDashboard() {
                 .then((resp) => {
                     let data = resp.data
                     setfetchedData(data)
-                    console.log(data)
                 })
 
         }
@@ -157,7 +156,30 @@ function AdminDashboard() {
             <Loading/>
         )
     }
+      
 
+    let element = (
+
+        <div>
+        <div className='h-1/3'>
+
+        <CustomChart graphType={chartType} graphTitle="" graphData={Object.values(bundlesStatistics)} graphLabels={Object.keys(bundlesStatistics)} ></CustomChart>
+        
+        </div>
+
+        <div className='flex justify-evenly mt-16 h-1/3'>
+
+            <h1 id="pie" className={setChartTypeStyle('pie') } onClick={handleChartTypeChange} >Pie</h1>
+            <h1 id='line' className={setChartTypeStyle('line') } onClick={handleChartTypeChange} >Line</h1>
+            <h1 id='bar' className={setChartTypeStyle('bar') } onClick={handleChartTypeChange}  >Bar</h1>
+            <h1 id='doughnut' className={setChartTypeStyle('doughnut') } onClick={handleChartTypeChange}  >doughnut</h1>
+
+        </div>
+
+
+    </div>
+    )
+        
     return (
         <div className={["w-full", styles.AllContainer].join(' ')}>
             <div className={['flex justify-center space-x-20 text-white py-2']}>
@@ -170,26 +192,9 @@ function AdminDashboard() {
             <div className={['px-5 w-full flex flex-wrap space-x-10 space-y-10', styles.allContentContainer].join(' ')}>
 
                 <div className={["w-1/4 h-auto rounded-xl text-white mt-10 p-2 pt-4", styles.graph].join(' ')} >
-                    <h1 className='text-center text-2xl'>Subscribed Bundles</h1>
+                    <h1 className='text-center text-3xl'>Subscribed Bundles</h1>
                     {Object.values(bundlesStatistics).length > 0 ?
-                        <div>
-                            <div className='h-1/3'>
-
-                                <CustomChart graphType={chartType} graphTitle="" graphData={Object.values(bundlesStatistics)} graphLabels={Object.keys(bundlesStatistics)} ></CustomChart>
-                            
-                            </div>
-
-                            <div className='flex justify-evenly mt-16 h-1/3'>
-
-                                <h1 id="pie" className={setChartTypeStyle('pie') } onClick={handleChartTypeChange} >Pie</h1>
-                                <h1 id='line' className={setChartTypeStyle('line') } onClick={handleChartTypeChange} >Line</h1>
-                                <h1 id='bar' className={setChartTypeStyle('bar') } onClick={handleChartTypeChange}  >Bar</h1>
-                                <h1 id='doughnut' className={setChartTypeStyle('doughnut') } onClick={handleChartTypeChange}  >doughnut</h1>
-
-                            </div>
-
-
-                        </div>
+                        element
                         : <h1 className='text-5xl text-center mt-20 ml-2 ' >No Bundles </h1>}
 
                 </div>
@@ -199,7 +204,7 @@ function AdminDashboard() {
                     <div className={["w-auto h-64 rounded-xl text-white p-10", styles.graph].join(' ')} >
                         <h1 className='text-center text-5xl'>Number Of New Users:</h1>
                         {parseInt(numberOfNewUsers) > 0 ? <p className='text-5xl mt-10 text-center font-bold'>{convertNumberToDisplay(numberOfNewUsers)}</p>
-                            : <h1 className='text-5xl mt-20 ml-2 ' >No New Users </h1>}
+                            : <h1 className='text-5xl mt-22 ml-2 ' >No New Users </h1>}
 
                     </div>
 
@@ -222,9 +227,9 @@ function AdminDashboard() {
 
                         <div className='h-full'>
 
-                            <div className='h-1/3  text-center'>
+                            <div className='h-1/3  text-center p-2'>
 
-                                <h1 className='text-3xl font-bold'>Total Profit:</h1>
+                                <h1 className='text-3xl font-bold tracking-wide'>Total Profit:</h1>
 
                                 <h1 className='text-3xl mt-6'>${bundlesprofit}</h1>
 
@@ -232,12 +237,12 @@ function AdminDashboard() {
 
                             <div className='h-1/3 text-center'>
 
-                                <h1 className='text-3xl mb-8 font-bold'>Details:</h1>
+                                <h1 className='text-3xl mb-8 font-bold tracking-wide'>Details:</h1>
 
                                 <div className='w-full '>
 
-                                    {Object.keys(bundlesStatistics).map((value) => {
-                                        return (<h1 className='text-center w-auto mt-3'> <span className='text-2xl'>{value}</span>  <span className='m-2 text-2xl'>x</span> <span className='text-2xl'>{bundlesStatistics[value]}</span> </h1>)
+                                    {Object.keys(bundlesStatistics).map((value,index) => {
+                                        return (<h1 className='text-center w-auto mt-3' key={index} > <span className='text-2xl'>{value}</span>  <span className='m-2 text-2xl'>x</span> <span className='text-2xl'>{bundlesStatistics[value]}</span> </h1>)
                                     })}
 
                                 </div>

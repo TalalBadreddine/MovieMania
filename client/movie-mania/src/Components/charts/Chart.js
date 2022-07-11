@@ -4,6 +4,7 @@ import { Chart } from 'react-chartjs-2';
 const CustomChart = (props) =>{
     const {graphType, graphTitle, graphData , graphLabels} = props
     return(
+      
         <Chart type = {graphType} data={{                                          
             labels: graphLabels,
             datasets: [
@@ -40,6 +41,7 @@ const CustomChart = (props) =>{
                   offset: [20,0,0,0,0,0,0,0,0,0]                     
                 },
               ],
+
         }} />
     )
 }

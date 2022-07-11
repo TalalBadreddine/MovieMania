@@ -10,8 +10,8 @@ const AdminNavBar = () => {
                 <div className="flex w-2/3 justify-end space-x-20  ">
                     <Link to = '/admin/dashboard' className={['p-3',styles.newNavPath].join(' ')}>Dashboard</Link>
                     <Link to = '/admin/users' className={['p-3',styles.newNavPath].join(' ')}>Users</Link>
-                    <p className={['p-3',styles.newNavPath].join(' ')}>Movies</p>
-                    <p className={['p-3',styles.newNavPath].join(' ')}>Bundles</p>
+                    <Link to = '/admin/movies' className={['p-3',styles.newNavPath].join(' ')}>Movies</Link>
+                    <Link to = '/admin/bundles' className={['p-3',styles.newNavPath].join(' ')}>Bundles</Link>
                 </div>
 
                 <div className="flex  w-1/3 justify-end">
