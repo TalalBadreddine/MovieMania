@@ -59,7 +59,6 @@ const AdminBundles = () => {
     useEffect(() => {
 
         setBundlesData(fetchedData)
-        console.log(fetchedData)
 
     }, [fetchedData])
 
@@ -198,7 +197,6 @@ const AdminBundles = () => {
                     price: currentBundle.price
 
                 }).then((data) => {
-                    console.log(data.status)
 
                     if (data.status == 200) {
                         getTableData()
