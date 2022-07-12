@@ -170,7 +170,7 @@ function AdminDashboard(req, res) {
         )
     }
       
-    // TODO use can change chart Type
+    // TODO user can change chart Type
 
     let element = (
 
@@ -183,7 +183,7 @@ function AdminDashboard(req, res) {
 
         <div className='flex justify-evenly mt-16 h-1/3'>
 
-            <h1 id="pie" className={setChartTypeStyle('pie') } onClick={handleChartTypeChange} >Pie</h1>
+            <h1 id="polarArea" className={setChartTypeStyle('polarArea') } onClick={handleChartTypeChange} >Polar</h1>
             <h1 id='line' className={setChartTypeStyle('line') } onClick={handleChartTypeChange} >Line</h1>
             <h1 id='bar' className={setChartTypeStyle('bar') } onClick={handleChartTypeChange}  >Bar</h1>
             <h1 id='doughnut' className={setChartTypeStyle('doughnut') } onClick={handleChartTypeChange}  >doughnut</h1>
