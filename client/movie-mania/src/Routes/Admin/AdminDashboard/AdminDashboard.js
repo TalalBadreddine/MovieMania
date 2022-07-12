@@ -1,9 +1,9 @@
-import CustomChart from '../../Components/charts/Chart';
+import CustomChart from '../../../Components/charts/Chart';
 import { useEffect, useState } from 'react';
 import styles from './AdminDashboardCss.module.css'
 import axios from 'axios'
-import TopMoviesAdmin from '../../Components/TopMoviesAdmin/TopMoviesAdmin';
-import Loading from '../../Components/Loading/Loading'
+import TopMoviesAdmin from '../../../Components/TopMoviesAdmin/TopMoviesAdmin';
+import Loading from '../../../Components/Loading/Loading'
 import  {useNavigate } from 'react-router-dom'
 
 let dateIntervalSkeleton = {
@@ -40,12 +40,14 @@ function AdminDashboard(req, res) {
                 .then((resp) => {
 
                     let data = resp.data
-                    console.log(data)
                     setfetchedData(data)
-
+                    
                 }).catch((err) => {
+            
                     let authError =  err.response.data
-                    if(authError == 'forbidden')navigate('/')
+                    if(authError){
+                        navigate('/')
+                    }
                 })
        
                 

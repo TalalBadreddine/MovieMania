@@ -1,7 +1,7 @@
 import styles from './AdminBundlesCss.module.css'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import Notification from '../../Components/Notification/Notification'
+import Notification from '../../../Components/Notification/Notification'
 import {useNavigate} from 'react-router-dom'
 
 
@@ -50,7 +50,7 @@ const AdminBundles = () => {
 
             }).catch((err) => {
                 let errorAuth = err.response.data
-                if(errorAuth == 'forbidden')navigate('/')
+                if(errorAuth)navigate('/')
             })
 
     }

@@ -1,8 +1,19 @@
-import { Link,Outlet} from "react-router-dom"
+import { Link,Outlet, useNavigate} from "react-router-dom"
 import {CgLogOut} from "react-icons/cg"
 import styles from './AdminNavBarCss.module.css'
+import axios from 'axios'
 
 const AdminNavBar = () => {
+
+    const navigate = useNavigate()
+
+    const handleLogout = async () => {
+        await axios.get('/Logout')
+        .then((data) => {
+            navigate('/')
+        })
+    }
+
     return(
         <>
             <div className={["flex justify-end px-10 text-2xl py-2 bg-transparent", styles.navContainer].join(' ')}>
@@ -16,7 +27,7 @@ const AdminNavBar = () => {
 
                 <div className="flex  w-1/3 justify-end">
 
-                     <Link to = '/admin/logout' className={['p-3',styles.logoutIcon].join(' ')}> <CgLogOut size={32}/> </Link>
+                     <button className={['p-3',styles.logoutIcon].join(' ')} onClick={ () => handleLogout()}> <CgLogOut size={32}/> </button>
 
                 </div>
 

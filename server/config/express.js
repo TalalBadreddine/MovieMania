@@ -121,6 +121,18 @@ async function startServer(){
 
         app.use('/user', getLikedMoviesRouter)
 
+        app.use('/Logout', (req, res) => {
+            res.cookie('jwt', {maxAge: 0 })
+
+            let uuid = req.cookies.uuid
+            // console.log(uuid)
+            // if(uuid){
+            //     req.cookies.set('uuid', {maxAge: 0});
+            //     req.session.uuid = null
+            // }
+            res.send('cleared')
+        })
+
         app.listen(serverPort, () => console.log(`Listening to port ${serverPort}`))
 
     }catch(error){

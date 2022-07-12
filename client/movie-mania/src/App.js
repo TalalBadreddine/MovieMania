@@ -3,11 +3,12 @@ import Landing from '../src/Routes/Landing/Landing';
 import './CommunColors.css'
 import AdminNavBar from './Components/AdminNavBar/AdminNavBar';
 import Success from './Components/Success/Success';
-import AdminBundles from './Routes/AdminBundles/AdminBundles';
-import AdminMovies from './Routes/AdminMovies/AdminMovies'
-import AdminDashboard from './Routes/AdminDashboard/AdminDashboard';
-import AdminUsers from './Routes/AdminUsers/AdminUsers';
+import AdminMovies from './Routes/Admin/AdminMovies/AdminMovies'
+import AdminDashboard from './Routes/Admin/AdminDashboard/AdminDashboard';
+import AdminUsers from './Routes/Admin/AdminUsers/AdminUsers';
 import Bundles from './Routes/Bundles/Bundles';
+import AdminBundles from './Routes/Admin/AdminBundles/AdminBundles';
+import Logout from './Components/Logout/Logout';
 
 function App() {
 
@@ -29,6 +30,8 @@ function App() {
 
 
           <Route path='admin' element={<AdminNavBar/>}>
+
+                <Route path='' element={<Logout/>} />
 
                 <Route path='dashboard' element={<AdminDashboard/>} />
 
