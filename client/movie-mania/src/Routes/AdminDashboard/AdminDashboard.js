@@ -4,14 +4,17 @@ import styles from './AdminDashboardCss.module.css'
 import axios from 'axios'
 import TopMoviesAdmin from '../../Components/TopMoviesAdmin/TopMoviesAdmin';
 import Loading from '../../Components/Loading/Loading'
+import  {useNavigate } from 'react-router-dom'
 
 let dateIntervalSkeleton = {
     startDate: new Date().toLocaleDateString(),
     endDate: new Date().toLocaleDateString()
 }
 
-function AdminDashboard() {
+function AdminDashboard(req, res) {
     let types = ['pie', 'line', 'bar', 'doughnut']
+
+    const navigate = useNavigate()
 
     const [fetchedData, setfetchedData] = useState('')
 
@@ -35,9 +38,17 @@ function AdminDashboard() {
 
             await axios.request('/admin/dashboard')
                 .then((resp) => {
+
                     let data = resp.data
+                    console.log(data)
                     setfetchedData(data)
+
+                }).catch((err) => {
+                    let authError =  err.response.data
+                    if(authError == 'forbidden')navigate('/')
                 })
+       
+                
 
         }
 

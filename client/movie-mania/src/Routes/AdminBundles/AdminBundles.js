@@ -2,6 +2,7 @@ import styles from './AdminBundlesCss.module.css'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Notification from '../../Components/Notification/Notification'
+import {useNavigate} from 'react-router-dom'
 
 
 let skeletonOfCurrentBundle = {
@@ -34,6 +35,8 @@ const AdminBundles = () => {
 
     const [errorDetails, setErrorsDetails] = useState(errorSkeleton)
 
+    const navigate = useNavigate()
+
     const getTableData = async () => {
 
         await axios.request('/admin/bundles')
@@ -44,6 +47,10 @@ const AdminBundles = () => {
                 })
 
                 setFetchedData(response)
+
+            }).catch((err) => {
+                let errorAuth = err.response.data
+                if(errorAuth == 'forbidden')navigate('/')
             })
 
     }
@@ -134,7 +141,7 @@ const AdminBundles = () => {
 
             let currentBundleTarget = bundlesData.filter((bundle) => bundle.title == titleOfBundle)[0]
 
-            axios.delete(`/admin/bundles/${currentBundleTarget._id}`)
+            axios.delete(`/admin/bundles/${currentBundleTarget._id}`) // TODO delete will affect the dashboard and the relation between bundles
 
             return
         }

@@ -30,7 +30,7 @@ const validateUser = (req, res, next) => {
 
     }else{
         // return res.redirect('http://localhost:3000/login')
-        return res.status(403).json("u don't have the access")
+        return res.status(403).json("forbidden")
     }
 }
 
@@ -48,7 +48,6 @@ const validateAdmin = (req, res, next) => {
 
 
             }else{
-                
                 let role = decodedToken['role']
                 role == "admin" ? next() : res.send("cannot go in")
 
@@ -57,7 +56,7 @@ const validateAdmin = (req, res, next) => {
 
     }else{
         // return res.redirect('/login')
-        return res.status(403).json("u don't have the access")
+        return res.status(403).json("forbidden")
     }
 }
 
