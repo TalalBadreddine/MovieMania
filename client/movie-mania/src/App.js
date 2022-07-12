@@ -9,6 +9,7 @@ import AdminUsers from './Routes/Admin/AdminUsers/AdminUsers';
 import Bundles from './Routes/Bundles/Bundles';
 import AdminBundles from './Routes/Admin/AdminBundles/AdminBundles';
 import Logout from './Components/Logout/Logout';
+import MovieDetail from './Routes/User/MovieDetails/MovieDetails';
 
 function App() {
 
@@ -42,6 +43,8 @@ function App() {
                 <Route path='bundles' element={<AdminBundles/>} />
 
           </Route>
+
+          <Route path='movies' element = {<MovieDetail movieId='453395' />} />
           
           
       </Routes>

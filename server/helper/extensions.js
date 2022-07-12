@@ -7,6 +7,7 @@ const dotenv = require('dotenv')
 const crypto = require('crypto');
 const modulesHelper = require('./modulesHelper.js')
 const manageBundlesAndUsersSchema = require('../models/manageBundlesAndUsersSchema.js')
+const movieSchema = require('../models/movieSchema.js')
 const hashType = 'sha1'
 const encodeAs = 'hex'
 
@@ -85,6 +86,21 @@ async function getAllUsers(){
 
         return results
 
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
+async function getMovieDetailsFromDbById(movieId){
+    try{
+        
+        const response = await movieSchema.find({
+            id:movieId
+        })
+
+        return response
     }
     catch(err){
         console.log(err.message)
@@ -591,6 +607,7 @@ module.exports = {
     getNumberOfTimeMoviesIsSubscribed,
     getThisMonthEnrolledMovies,
     getNumberofBundlesSubscribed,
+    getMovieDetailsFromDbById,
     getAllBundles,
     getAllUsers,
     hashString  

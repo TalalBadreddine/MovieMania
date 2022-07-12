@@ -193,4 +193,20 @@ const subscribeToMovieById = async (req, res) => {
     }
 }
 
-module.exports = {getAllMovies, getMoviesByGenre, likeMovieById, subscribeToMovieById}
+const getMovieById = async (req, res) => {
+    try{
+
+        const movieId = req.body.movieId
+
+        await extensions.getMovieDetailsFromDbById(movieId).then((data) => {
+            return res.send(data)
+        })
+
+    }
+    catch(err){
+        console.log(err.message)
+    }
+
+}
+
+module.exports = {getAllMovies, getMoviesByGenre, likeMovieById, subscribeToMovieById, getMovieById}
