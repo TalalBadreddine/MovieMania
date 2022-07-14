@@ -35,7 +35,7 @@ const getUserInfo = async (req, res, next) => {
         }else{
               let uniqueId = uuidv4()
              
-              res.cookie('uuid', `${uniqueId}`)
+              res.cookie('uuid', `${uniqueId}`, {httpOnly: true})
               req.session[String(uniqueId)] =  user
               // return res.redirect('http://localhost:3000/regiter/payments')
               return res.json("created")

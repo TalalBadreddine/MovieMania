@@ -122,14 +122,14 @@ async function startServer(){
         app.use('/user', getLikedMoviesRouter)
 
         app.use('/Logout', (req, res) => {
-            res.cookie('jwt', {maxAge: 0 })
+            res.cookie('jwt', {maxAge: 0,httpOnly: true })
 
             let uuid = req.cookies.uuid
             // console.log(uuid)
-            // if(uuid){
-            //     req.cookies.set('uuid', {maxAge: 0});
-            //     req.session.uuid = null
-            // }
+            if(uuid){
+                req.cookies.set('uuid', {maxAge: 0});
+                req.session.uuid = null
+            }
             res.send('cleared')
         })
 

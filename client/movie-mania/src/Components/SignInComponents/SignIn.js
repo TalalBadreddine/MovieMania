@@ -88,7 +88,7 @@ const SignIn = () => {
             setErrorObject({...errorObject, ['errorContent']: 'Please Insert Password Properly', ['errorClass']: errorClass.replace('hidden', '')})
             return
         }
-
+    
         (async () => { const response = await fetch('/login', {
               method: 'POST',
               headers: {

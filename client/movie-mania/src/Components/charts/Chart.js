@@ -47,8 +47,6 @@ const CustomChart = (props) => {
                 }]
             },
             options: {
-                tooltips: { enabled: false },
-                hover: { mode: null },
                 scales: {
                     y: {
                         beginAtZero: true
@@ -56,8 +54,10 @@ const CustomChart = (props) => {
                     x: {
                         beginAtZero: true
                     }
-                }
-            }
+                },
+            },
+            hoverOffset:20,
+            offset: [20,0,0,0,0,0,0,0,0,0]  
 
         });
 
@@ -106,9 +106,9 @@ return (
     //             'rgba(225, 99, 251, 0.3)',
     //             'rgba(225, 99, 101, 0.4)',                        
     //           ],
-    //           borderWidth: 1,
-    //           hoverOffset:20,
-    //           offset: [20,0,0,0,0,0,0,0,0,0]                     
+            //   borderWidth: 1,
+            //   hoverOffset:20,
+            //   offset: [20,0,0,0,0,0,0,0,0,0]                     
     //         },
     //       ],
 

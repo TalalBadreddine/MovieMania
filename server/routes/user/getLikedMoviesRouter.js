@@ -2,7 +2,8 @@ const {
     addLikedMovie,
     removeLikedMovie,
     getAllMoviesFromDB,
-    getUserLikedMoviesFromDB
+    getUserLikedMoviesFromDB,
+    getUserInfo
 } = require('../../controllers/user/getLikedMoviesController.js')
 
 const Router = require('express').Router;
@@ -19,5 +20,8 @@ likedMoviesRouter.get('/session/movies',getAllMoviesFromDB)
 
 
 likedMoviesRouter.get('/:userId/likedMovies',getUserLikedMoviesFromDB)
+
+likedMoviesRouter.get('/info', getUserInfo)
+
 
 module.exports = likedMoviesRouter;

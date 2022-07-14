@@ -44,7 +44,7 @@ function App() {
 
           </Route>
 
-          <Route path='movies' element = {<MovieDetail movieId='453395' />} />
+          <Route path='movies' element = {<MovieDetail movieId='979163' key={'1'} />} />
           
           
       </Routes>
