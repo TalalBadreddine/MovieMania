@@ -37,7 +37,7 @@ const {
 } = process.env
 
 async function connectDB(){
-    const uri = `mongodb+srv://talalbadreddine:Ta07762909@mycluster.bnshd.mongodb.net/?retryWrites=true&w=majority`
+    const uri = `mongodb://${dbHost}:${dbPort}/${dbName}`
     await mongoose.connect(uri)
     console.log("Connected to db!")
 }
@@ -96,7 +96,9 @@ async function startServer(){
                       await extensions.addToDb(userSchema, user)
                       await extensions.newUserSubscribeToBundle(user.email, user.bundlesId[ user.bundlesId.length - 1])
                       res.json('done')
+                      console.log(userSchema, user)
                 } })
+                
       
          }else {
             res.json("forbidden")
