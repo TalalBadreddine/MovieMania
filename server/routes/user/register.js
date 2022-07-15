@@ -27,3 +27,4 @@ registerRouter.get('/payments', payments)
 registerRouter.post('/payments', makePayment)
 
 module.exports = registerRouter
+

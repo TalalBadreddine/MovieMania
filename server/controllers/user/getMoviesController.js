@@ -43,13 +43,17 @@ const getAllMovies = async (req, res) => {
             await extensions.getAllMoviesId().then(async (results) => {
 
                 for(let i = 0 ; i < results.length ; i++){
+                    
                     let currentMovieId = results[i]
                     
                    await  extensions.getMovieDetailById(currentMovieId).then(async (movieDetails) => {
                         await extensions.addToDb(moviesSchema, movieDetails)
                         listOfAllMoviesDetails.push(movieDetails)
                     })
+                    
+
                 }
+                console.log(listOfAllMoviesDetails[0])
             })
 
             res.send(listOfAllMoviesDetails)
