@@ -325,11 +325,12 @@ async function getThisMonthEnrolledMovies(userEmail){
 
         await getUserThisMonthBundles(userEmail).then((response) => {
             thisMonthBundles = response
+           
         })
 
         for(let i = 0 ; i < thisMonthBundles.length; i++){
             let currentBundleMovies = thisMonthBundles[i].enrolledMoviesId
-
+          
             for(let j = 0 ; j < currentBundleMovies.length ; j++){
                 subscribedMovies.push(currentBundleMovies[j])
             }

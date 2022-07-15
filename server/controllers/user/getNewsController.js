@@ -5,6 +5,7 @@ const dotenv = require('dotenv')
 const session = require('express-session')
 const NewsSchema = require('../../models/newsSchema');
 const newsSchema = require('../../models/newsSchema');
+const movieSchema = require('../../models/movieSchema')
 
 dotenv.config({path: __dirname + '/../../../.env'})
 
@@ -65,6 +66,8 @@ const getAllUpcomingMovies = async (req, res) => {
         console.log(err.message)
     }
 }
+
+        
 
 
     
@@ -135,9 +138,50 @@ const getUpcomingMoviesByGenre = async (req , res) => {
     
     
 }
+        const moviesYouMayLike = async (req, res) => { 
+            await extensions.getThisMonthEnrolledMovies(session.currentUserInfo.email).then( async (resp)=>{
+             let moviesYouMayLike = resp
+             let subscribedMovies = []
+            for(let i=0;i < moviesYouMayLike.length; i++){
+
+            //  moviesYouMayLikeId.push(moviesYouMayLike[i])  
+
+             let movieIdFind = await  movieSchema.find({
+                'id': moviesYouMayLike[i]
+            },{
+                genres:1,
+                _id: 0
+            });
+            
+            for(let i=0; i < movieIdFind.length;i++){
+                // console.log(movieIdFind[i].genres)
+                for(let j = 0 ; j < movieIdFind[i].genres.length ; j++){
+                    // console.log(movieIdFind[i].genres[j].name)
+                    let movieGenre = movieIdFind[i].genres[j].name
+                    // console.log(movieGenre)
+                    let allGenre = new Map();
+                    for(let k = 0; k < movieGenre.length; k++){
+                        if(allGenre.has(movieGenre[k])){
+                            allGenre.set(movieGenre[k], allMovies.get(movieGenre[k]) + 1)
+                        }else{
+                            console.log(movieGenre[k])
+                            allGenre.set(movieGenre[k], 1)
+                        }
+                        return allGenre
+                        console.log(allGenre)
+                    }
+                }
+             }
+            subscribedMovies.push(movieIdFind)
+            // console.log(typeof subscribedMovies)
+                
+            }
+            });
+}
 
 
 module.exports = {
     getAllUpcomingMovies, 
     getUpcomingMoviesByGenre, 
+    moviesYouMayLike,
     upComing}
