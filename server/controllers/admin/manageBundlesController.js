@@ -22,7 +22,6 @@ const getBundles = async (req, res) => {
             movieLimit: 1,
             price: 1 
         }
-        console.log(filters)
 
         const bundles = await bundleSchema.find(filters, projection);
 
@@ -65,7 +64,7 @@ const getBundles = async (req, res) => {
             const result = await bundleSchema.create(bundle);
 
             if(result){
-                res.status(201).json({message: "Bundle Added"})
+                res.status(200).json({message: "Bundle Added"})
                 console.log(bundle)
             } else { 
                 res.status(409).json({message: "Failed to add Bundle"})
@@ -103,7 +102,7 @@ const getBundles = async (req, res) => {
             const bundles = await bundle.findById(req.params.id)
             bundles.title = req.body.title
             const updatedBundle = await bundles.save()
-            res.json(updatedBundle)
+            res.status(200).json(updatedBundle)
             console.log("Bundle Updated")
         }catch(error) { 
             res.status(500).json({message: "internal Error"})

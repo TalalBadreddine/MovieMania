@@ -20,7 +20,6 @@ const getLikedMoviesRouter = require('../routes/user/getLikedMoviesRouter.js')
 const  loginRouter = require('../routes/loginRoute.js')
 const userSchema = require('../models/userSchema')
 const {validateUser,validateAdmin } = require('../middleware/authMiddleware.js')
-const modelsHelper = require('../helper/modulesHelper')
 const upload = multer();
 
 
@@ -38,7 +37,7 @@ const {
 } = process.env
 
 async function connectDB(){
-    const uri = `mongodb://${dbHost}:${dbPort}/${dbName}`
+    const uri = `mongodb+srv://talalbadreddine:Ta07762909@mycluster.bnshd.mongodb.net/?retryWrites=true&w=majority`
     await mongoose.connect(uri)
     console.log("Connected to db!")
 }
@@ -72,9 +71,12 @@ async function startServer(){
         // Insert Routest here
 
         app.get('/success', (req, res) => {
-            let currentUser = session.currentUserInfo
-           
-            if(currentUser){
+          
+            let currentUserId = req.cookies.uuid
+            let userExist = req.session[currentUserId]
+            
+            if(userExist){
+                let currentUser = req.session[currentUserId][0]
 
                 let user = {
                     firstName: currentUser.firstName,
@@ -82,22 +84,22 @@ async function startServer(){
                     password: currentUser.password,
                     age: currentUser.age,
                     email: currentUser.email,
-                    bundlesId: ['62ab32a5ddb763a1b803a06c']
+                    bundlesId: currentUser.bundlesId
                   }
 
             extensions.userAlreadyExist(user.email).then( async (result) => {
                 if(result){
                     await extensions.existingUserSubscribeToBundle(user.email, user.bundlesId[ user.bundlesId.length - 1])
-                    res.send("User Already Exist")
+                    res.json("done")
 
                 }else{
                       await extensions.addToDb(userSchema, user)
                       await extensions.newUserSubscribeToBundle(user.email, user.bundlesId[ user.bundlesId.length - 1])
-                      res.render('success.ejs')
+                      res.json('done')
                 } })
       
          }else {
-            res.status(401).json("can't go")
+            res.json("forbidden")
          }
          
         })
@@ -125,9 +127,20 @@ async function startServer(){
 
         app.use('/user', getLikedMoviesRouter)
 
+        app.use('/Logout', (req, res) => {
+            res.cookie('jwt', {maxAge: 0,httpOnly: true })
+
+            let uuid = req.cookies.uuid
+            // console.log(uuid)
+            if(uuid){
+                res.cookie('uuid', 'i will die', {maxAge: 0});
+                req.session.uuid = null
+            }
+            res.send('cleared')
+        })
+
         app.use('/upcoming', getNewsRouter)
 
-        
 
         app.listen(serverPort, () => console.log(`Listening to port ${serverPort}`))
 

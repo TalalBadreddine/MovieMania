@@ -2,6 +2,7 @@ const extensions = require('../../helper/extensions.js')
 const userSchema = require('../../models/userSchema.js')
 const session = require('express-session')
 const dotenv = require('dotenv')
+const { v4: uuidv4 } = require('uuid')
 
 dotenv.config({path: "../../.env"})
 
@@ -30,37 +31,62 @@ const getUserInfo = async (req, res, next) => {
 
     extensions.userAlreadyExist(requestBody.email).then( async (result) => {
         if(result){
-            res.send("User Already Exist")
+            return res.send("exist")
         }else{
-              session.currentRegiterUser =  user
+              let uniqueId = uuidv4()
+             
+              res.cookie('uuid', `${uniqueId}`, {httpOnly: true})
+              req.session[String(uniqueId)] =  user
               // return res.redirect('http://localhost:3000/regiter/payments')
-              return res.status(200).json("All is good")
+              return res.json("created")
         }
     })
 }
 
 
-const payments = (req, res, next) => {
- let userInfo = session.currentUserInfo
+const payments = async (req, res, next) => {
+  let currentUserId = req.cookies.uuid
+
+ let userInfo = req.session[currentUserId]
 
     if(userInfo == undefined){
-      return res.status(403).json('not allowed')
+      return res.status(403).json('forbidden')
     }
 
-    let testBundle = [ 
-        {
-        bundleName: "FirstBundl",
-        price: 10,
-        limit: 20
+    if(userInfo.bundlesId == undefined ){
+
+        await extensions.getAllBundles().then((data) => {
+          return res.json(data)
+        })
+
+    }else{
+
+      await extensions.getAllBundlesThatUserCanSubscribeTo(userInfo).then((data) => {
+        return res.json(data)
+      })
+
     }
-]
-    // res.render('payments', {data: testBundle})
     
 }
 
 
 const makePayment = async (req, res) => {
     try {
+
+      let currentUserId = req.cookies.uuid
+      let userInfo = req.session[currentUserId]
+      let newUserInfo
+      if(userInfo['bundlesId'] == undefined){
+
+        newUserInfo = [{...userInfo,['bundlesId']: [req.body.items.bundleId]}]
+        req.session[currentUserId] = newUserInfo
+
+      }else{
+
+        userInfo.bundlesId.push(req.body.items.bundleId)
+
+      }
+
         let bundleToBuy = {
             price_data: {
               currency: "usd",
@@ -77,7 +103,7 @@ const makePayment = async (req, res) => {
           mode: "payment",
           line_items: [bundleToBuy],
           success_url: 'http://localhost:3000/success',
-          cancel_url: 'http://localhost:3000/cancel',
+          cancel_url: 'http://localhost:3000/',
         })
         
         session.currentBundle = req.body.items.bundleName
@@ -85,7 +111,9 @@ const makePayment = async (req, res) => {
         res.json({ url: session.url})
         
       } catch (e) {
+
         res.status(500).json({ error: e.message })
+        
       }
 
 }
@@ -95,3 +123,4 @@ module.exports = {
     makePayment,
     payments
 }
+

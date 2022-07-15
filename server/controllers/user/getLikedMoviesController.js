@@ -27,6 +27,26 @@ const getAllMoviesFromDB = async (req, res) => {
     }
 }
 
+
+const getUserInfo = async (req, res) => {
+
+    try{
+
+        let uniqueId = req.cookies['uuid']
+
+        let userInfo = req.session[uniqueId]
+
+        console.log(userInfo)
+        return userInfo
+
+    }
+    catch(err){
+        console.log(err.message)
+    }
+
+}
+
+
 const getUserLikedMoviesFromDB = async (req, res) => {
 
     try {
@@ -104,5 +124,6 @@ module.exports = {
     addLikedMovie,
     removeLikedMovie,
     getAllMoviesFromDB,
-    getUserLikedMoviesFromDB
+    getUserLikedMoviesFromDB,
+    getUserInfo
 }

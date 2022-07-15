@@ -20,7 +20,7 @@ const {
 const getAllMovies = async (req, res) => {
 
     try{ 
-        let availbleBundles
+       let availbleBundles
 
         await extensions.getUserThisMonthBundles(session.currentUserInfo.email).then( (response) => {
             availbleBundles = response
@@ -108,8 +108,10 @@ const likeMovieById = async(req, res) => {
 
     try{
 
-        const movieId = req.query.movieId
-        let userInfo = session.currentUserInfo
+        
+        const movieId = req.body.movieId
+        let uuid = req.cookies.uuid
+        let userInfo = req.session[uuid]
         let userLikedMovies = userInfo.likedMovies
         let movieIsAlreadyLiked = userLikedMovies.includes(movieId)
 
@@ -126,7 +128,7 @@ const likeMovieById = async(req, res) => {
         }
 
         userInfo.likedMovies = userLikedMovies
-        session.userInfo = userInfo
+        req.session.userInfo = userInfo
 
         await userSchema.updateOne({
             _id: userInfo._id
@@ -136,7 +138,7 @@ const likeMovieById = async(req, res) => {
             }
         })
 
-        res.status(200).json("Done")
+        res.status(200).json("done")
     }
     catch(err){
         console.log(err.message)
@@ -147,10 +149,12 @@ const likeMovieById = async(req, res) => {
 const subscribeToMovieById = async (req, res) => {
     try{      
   
-        const movieId = req.query.movieId
-        let userInfo = session.currentUserInfo
+        const movieId = req.body.movieId
+        let uniqueId = req.cookies.uuid
+        let userInfo = req.session[uniqueId]
         let nonOverLimitBundles 
         let allSubscribedMovies = []    
+
 
         await extensions.getThisMonthEnrolledMovies(userInfo.email).then( (response) => {
             allSubscribedMovies = response
@@ -163,25 +167,32 @@ const subscribeToMovieById = async (req, res) => {
 
 
         if(nonOverLimitBundles.length == 0){
-            return res.json("You can't subscribe to movies, your bundle limit is full")
-        }
-  
+            return res.json("full")
+        }        
+        
+       
+
         let userEnrolledMovies = nonOverLimitBundles[0].enrolledMoviesId
         let movieIsAlreadyEnrolled = allSubscribedMovies.includes(movieId)
-       
+        let manageBundlesAndUsersId = nonOverLimitBundles[0]._id
+
+
         if(movieIsAlreadyEnrolled){
             
-            return res.status(200).json("Movies Already Enrolled")
+            return res.status(200).json("done")
 
         }else{
 
             userEnrolledMovies.push(movieId)
+            userInfo.subscribedMovies = userEnrolledMovies
+            req.session[uniqueId] = userInfo
             console.log(`Enrolled Movie added => ${movieId}`)
 
         }
 
 
         await manageBundlesAndUsersSchema.updateOne({
+            _id: manageBundlesAndUsersId._id,
             userId: userInfo._id
         },{
             $set: {
@@ -190,11 +201,40 @@ const subscribeToMovieById = async (req, res) => {
             $inc: { numberOfMoviesLeft: -1 }
         })
 
-        res.status(200).json("Done")
+        res.status(200).json("done")
     }
     catch(err){
         console.log(err.message)
     }
 }
 
-module.exports = {getAllMovies, getMoviesByGenre, likeMovieById, subscribeToMovieById}
+const getMovieById = async (req, res) => {
+    try{
+
+        const movieId = req.body.movieId
+
+        let uniqueId = await req.cookies['uuid']
+
+        let userInfo = await req.session[uniqueId]
+
+        let movieDetailsAndPersonal = {
+            
+        }
+
+        await extensions.getMovieDetailsFromDbById(movieId).then(async (data) => {
+            movieDetailsAndPersonal['movieDetails'] = data
+            
+        })
+
+        movieDetailsAndPersonal['personalInfo'] = userInfo
+
+        return res.send(movieDetailsAndPersonal)
+
+    }
+    catch(err){
+        console.log(err.message)
+    }
+
+}
+
+module.exports = {getAllMovies, getMoviesByGenre, likeMovieById, subscribeToMovieById, getMovieById}

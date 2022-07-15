@@ -5,10 +5,9 @@ const manageBundlesAndUsers = require('../models/manageBundlesAndUsersSchema.js'
 const axios = require('axios')
 const dotenv = require('dotenv')
 const crypto = require('crypto');
-const nodemailer = require('nodemailer')
-const nexmo = require('nexmo')
 const modulesHelper = require('./modulesHelper.js')
 const manageBundlesAndUsersSchema = require('../models/manageBundlesAndUsersSchema.js')
+const movieSchema = require('../models/movieSchema.js')
 const hashType = 'sha1'
 const encodeAs = 'hex'
 
@@ -150,6 +149,35 @@ async function getAllMoviesId(){
 
 
 
+async function getAllUsers(){
+    try{
+
+        let results = await userSchema.find()
+
+        return results
+
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
+async function getMovieDetailsFromDbById(movieId){
+    try{
+        
+        const response = await movieSchema.find({
+            id:movieId
+        })
+
+        return response
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
 async function getMovieDetailById(id){
     let results 
 
@@ -194,28 +222,113 @@ async function getMovieDetailById(id){
 
 // <-------- DataBase -------->
 
+
+async function getNumberofBundlesSubscribed(){
+    try{
+        let results = await manageBundlesAndUsers.find()
+        let arrOfAllBundlesSubscribed = []
+
+        for(let i = 0 ; i < results.length ; i++){
+            let currentBundle = results[i]
+
+            let currentObject= {
+                registerDate: currentBundle['startBundleDate'],
+                bundleTitle: '',
+                bundlePrice: 0
+            }
+
+            await getBundleNameAndPriceById(currentBundle['bundleId']).then((data) => {
+                currentObject.bundleTitle = data[0]['title']
+                currentObject.bundlePrice = data[0]['price']
+            })
+
+            arrOfAllBundlesSubscribed.push(currentObject)
+
+        }
+        
+        return arrOfAllBundlesSubscribed
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
+async function getBundleNameAndPriceById(bundleId){
+    try{
+            let results = await bundleSchema.find({
+                _id: bundleId
+            },{
+                title:1,
+                price:1
+            })
+
+            return results
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
 async function getNumberOfTimeMoviesIsSubscribed(){
     try{
-        let allMovies = new Map()
+
+        let allMovies = {}
         let allBundles = await manageBundlesAndUsersSchema.find()
         
         for(let i = 0 ; i < allBundles.length;  i++){
             let currentBundleMovies = allBundles[i].enrolledMoviesId
   
             for(let j = 0 ; j < currentBundleMovies.length ; j++){
-
-                if(allMovies.has(currentBundleMovies[j])){
+                                                                             
+                if(allMovies[currentBundleMovies[j]] != undefined){
                    
-                    allMovies.set(currentBundleMovies[j], allMovies.get(currentBundleMovies[j]) + 1)
+                    allMovies[currentBundleMovies[j]].count =  allMovies[currentBundleMovies[j]].count + 1
 
                 }else{
-                    console.log(currentBundleMovies[j])
-                    allMovies.set(currentBundleMovies[j], 1)
+
+                    let details
+
+                    await getMovieDetailById(currentBundleMovies[j]).then((data) => {
+                     details = data
+                    })
+ 
+                     allMovies[currentBundleMovies[j]] =  {
+                         count: 1,
+                         movieDetails: details
+                     }
 
                 }
             }
         }
-        return allMovies
+
+        let moviesArr = []
+
+        for(let i of Object.keys(allMovies)){
+            moviesArr.push(
+            {
+                count: allMovies[i].count,
+                details: allMovies[i].movieDetails
+            }
+            )
+        }
+
+        return moviesArr
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
+
+async function getAllBundles(){
+    try{
+
+        const results = await bundleSchema.find()
+
+        return results
+
     }
     catch(err){
         console.log(err.message)
@@ -242,7 +355,7 @@ async function getAllBundlesThatUserCanSubscribeTo(userEmail, onlyId = false){
        let userCurrentBundlesId = userCurrentBundles.map((bundle) => bundle.bundleId)
        let allBundles = await bundleSchema.find()
        let filterdBundles = []
-
+       
        for(let i = 0 ; i < allBundles.length ; i++){
         if(userCurrentBundlesId.includes(`${allBundles[i]._id}`))continue
         filterdBundles.push(allBundles[i])
@@ -310,6 +423,7 @@ async function getMovieLimitByBundleId(currentBundleId){
         },{
             movieLimit: 1
         })
+ 
         return movieLimit
     }
     catch(err){
@@ -452,7 +566,7 @@ async function existingUserSubscribeToBundle(userEmail, bundleId){
 }
 
 
-async function newUserSubscribeToBundle(userEmail, bundleId){
+async function newUserSubscribeToBundle(userEmail, bundleid){
     try{
         let user 
         await getUserInfo(userEmail).then((response) => {
@@ -462,13 +576,13 @@ async function newUserSubscribeToBundle(userEmail, bundleId){
         const currentMonthDate = modulesHelper.getCurrentDate()
         let numberOfMoviesLeft
 
-         await getMovieLimitByBundleId(bundleId).then( (results) => {
+         await getMovieLimitByBundleId(bundleid).then( (results) => {
             numberOfMoviesLeft = results[0].movieLimit
          })
-
+      
         let element = {
             userId: user._id,
-            bundleId: bundleId,
+            bundleId: bundleid,
             startBundleDate: currentMonthDate,
             endBundleDate: nextMonthDate,
             numberOfMoviesLeft: parseInt(numberOfMoviesLeft)
@@ -586,5 +700,9 @@ module.exports = {
     getUserCurrentMonthBundlesWithNonOverLimitMovies,
     getNumberOfTimeMoviesIsSubscribed,
     getThisMonthEnrolledMovies,
+    getNumberofBundlesSubscribed,
+    getMovieDetailsFromDbById,
+    getAllBundles,
+    getAllUsers,
     hashString  
 }

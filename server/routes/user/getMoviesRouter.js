@@ -1,8 +1,11 @@
 const {
+    
     getAllMovies,
     getMoviesByGenre,
     likeMovieById,
-    subscribeToMovieById
+    subscribeToMovieById,
+    getMovieById
+
  } = require('../../controllers/user/getMoviesController.js')
 
 const router = require('express').Router
@@ -10,6 +13,8 @@ const router = require('express').Router
 const moviesRouter = router()
 
 moviesRouter.get('/', getAllMovies)
+
+moviesRouter.post('/', getMovieById)
 
 moviesRouter.post('/like', likeMovieById )
 
