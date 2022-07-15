@@ -103,7 +103,7 @@ const SignIn = () => {
             if(content == 'admin')return navigate('admin/dashboard')
 
             const isUser = content 
-            ? alert('Redirect Home') 
+            ? navigate('user/movies') 
             : setErrorObject({...errorObject, ['errorContent']: 'User does not exist', ['errorClass']: errorClass.replace('hidden', '')})
 
           })();

@@ -2,15 +2,6 @@ import {Routes, Route} from 'react-router-dom'
 import Landing from '../src/Routes/Landing/Landing';
 import './CommunColors.css'
 import React from 'react'
-// import AdminNavBar from './Components/AdminNavBar/AdminNavBar';
-// import Success from './Components/Success/Success';
-// import AdminMovies from './Routes/Admin/AdminMovies/AdminMovies'
-// import AdminDashboard from './Routes/Admin/AdminDashboard/AdminDashboard';
-// import AdminUsers from './Routes/Admin/AdminUsers/AdminUsers';
-// import Bundles from './Routes/Bundles/Bundles';
-// import AdminBundles from './Routes/Admin/AdminBundles/AdminBundles';
-// import Logout from './Components/Logout/Logout';
-// import MovieDetail from './Routes/User/MovieDetails/MovieDetails';
 
 const LazyAdminNavBar = React.lazy(() => import('./Components/AdminNavBar/AdminNavBar'))
 const LazySuccess = React.lazy(() => import('./Components/Success/Success'))
@@ -21,6 +12,8 @@ const LazyBundles = React.lazy(() => import('./Routes/Bundles/Bundles'))
 const LazyAdminBundles = React.lazy(() => import('./Routes/Admin/AdminBundles/AdminBundles'))
 const LazyLogout = React.lazy(() => import('./Components/Logout/Logout'))
 const LazyMovieDetails = React.lazy(() => import('./Routes/User/MovieDetails/MovieDetails'))
+const LazyUserNavbar = React.lazy(() => import('./Components/UserNavbar/UserNavbar'))
+const LazyUserHome = React.lazy(() => import('./Routes/User/UserHome/Home'))
 
 function App() {
 
@@ -55,6 +48,12 @@ function App() {
                 <Route path='bundles' element={<LazyAdminBundles/>} />
 
           </Route>
+
+            <Route path='user' element={<LazyUserNavbar />} > 
+
+              <Route path='movies' element={<LazyUserHome/>} />
+
+              </Route>
 
           <Route path='movies' element = {<LazyMovieDetails movieId='979163' key={'1'} />} />
           

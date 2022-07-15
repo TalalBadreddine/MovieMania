@@ -47,8 +47,19 @@ const getAllMovies = async (req, res) => {
                     let currentMovieId = results[i]
                     
                    await  extensions.getMovieDetailById(currentMovieId).then(async (movieDetails) => {
+                        let usedMovieData = {
+                            title: "",
+                            poster_path: "",
+                            id: "",
+                            genres: ""  
+                        }
                         await extensions.addToDb(moviesSchema, movieDetails)
-                        listOfAllMoviesDetails.push(movieDetails)
+                        usedMovieData.title = movieDetails.title,
+                        usedMovieData.poster_path = movieDetails.poster_path,
+                        usedMovieData.id = movieDetails.id,
+                        usedMovieData.genres = movieDetails.genres
+
+                        listOfAllMoviesDetails.push(usedMovieData)
                     })
                     
 
