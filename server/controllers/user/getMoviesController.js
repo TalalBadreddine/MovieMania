@@ -165,9 +165,12 @@ const subscribeToMovieById = async (req, res) => {
         if(nonOverLimitBundles.length == 0){
             return res.json("full")
         }        
-  
+        
+       
+
         let userEnrolledMovies = nonOverLimitBundles[0].enrolledMoviesId
         let movieIsAlreadyEnrolled = allSubscribedMovies.includes(movieId)
+        let manageBundlesAndUsersId = nonOverLimitBundles[0]._id
 
 
         if(movieIsAlreadyEnrolled){
@@ -185,6 +188,7 @@ const subscribeToMovieById = async (req, res) => {
 
 
         await manageBundlesAndUsersSchema.updateOne({
+            _id: manageBundlesAndUsersId._id,
             userId: userInfo._id
         },{
             $set: {

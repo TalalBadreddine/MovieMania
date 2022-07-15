@@ -252,7 +252,7 @@ const AdminBundles = () => {
             <div className={['mt-14  h-3/4', styles.contentOfThePage].join(' ')}>
 
                 <div className='text-2xl text-white ml-2 w-2/6 h-auto mb-1'>
-                    <Notification content={errorDetails.content} title={errorDetails.title} hidden={errorDetails.hidden} handleDoneBtn={handleDoneBtn} ></Notification>
+                    <Notification content={errorDetails.content} title={errorDetails.title} hidden={errorDetails.hidden} handleDoneBtn={handleDoneBtn}  ></Notification>
                     <form>
                         <div className="flex">
                             <div className=" xl:w-96">

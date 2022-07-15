@@ -6,11 +6,14 @@ import styles from './MovieDetailsCss.module.css'
 import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai'
 import {AiOutlineHeart, AiFillHeart,} from 'react-icons/ai'
 import {BiCheck} from 'react-icons/bi'
-
+import { useNavigate } from "react-router-dom"
+import Notification from "../../../Components/Notification/Notification"
 
 const MovieDetail = (props) => {
 
     const { movieId } = props
+
+    const navigate = useNavigate()
 
     const [movieDetails, setMovieDetails] = useState('')
 
@@ -25,6 +28,8 @@ const MovieDetail = (props) => {
     const [isMovieEnrolled, setIsMovieEnrolled] = useState()
 
     const [isMovieLiked, setIsMovieLiked] = useState()
+
+    const [errorIsHidden, setErrorIsHidden] = useState(true)
 
     useEffect(() => {
 
@@ -83,7 +88,9 @@ const MovieDetail = (props) => {
             })
             .then( (data) => {
                 if(data.data == 'done'){setIsMovieEnrolled(true)}
-                else if(data.data == 'full')alert('need to subscribe')
+                else if(data.data == 'full'){
+                    setErrorIsHidden(false)
+                }
         
             })
             .catch( (err) => console.log(err))
@@ -92,6 +99,10 @@ const MovieDetail = (props) => {
         }
 
         // isMovieEnrolled ?   : setIsMovieEnrolled(!isMovieEnrolled)
+    }
+
+    const handleRedirectingToBundles = () => {
+        return navigate('/payments')
     }
 
     if (!movieDetails || ! currentVideoLink) {
@@ -105,6 +116,8 @@ const MovieDetail = (props) => {
             <div className={["w-screen ", styles.movieContainer].join('')}>
                 {currentVideoLink != undefined && <ReactPlayer url={`https://www.youtube.com/watch?v=${currentVideoLink}`} pip={true} width='100%' height='100%' playing={true} muted={true} controls={false} className={styles.reactPlayer} />}
             </div>
+
+            <Notification hidden={errorIsHidden} title={'Bundle Is over'} content={`Sadly your monthly bundle is over but you can subscribe to other bundle, where you can keep your movie and enroll into new movies, would you like to do that ?`} firstOption={'Yes'} handleDoneBtn={handleRedirectingToBundles} secondOption={'Not now'} secondOptionAction={() => setErrorIsHidden(true)}  ></Notification>
 
             <div className="h-full text-white pl-10 mt-2 ">
 

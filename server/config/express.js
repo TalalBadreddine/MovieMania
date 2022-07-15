@@ -127,7 +127,7 @@ async function startServer(){
             let uuid = req.cookies.uuid
             // console.log(uuid)
             if(uuid){
-                req.cookies.set('uuid', {maxAge: 0});
+                res.cookie('uuid', 'i will die', {maxAge: 0});
                 req.session.uuid = null
             }
             res.send('cleared')

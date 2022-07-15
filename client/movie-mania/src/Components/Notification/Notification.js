@@ -10,8 +10,10 @@ const Notification = (props) => {
             <div className="justify-center">
                  <p className="text-white text-center text-xl">{props.content}!</p>
 
-                 <div className="w-24  m-auto mt-6 mb-4">
-                    <button className="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 rounded-xl" onClick={props.handleDoneBtn}>Done</button>
+                 <div className="w-full  m-auto mt-6 mb-4 flex">
+                    <button className="w-1/2 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 rounded-xl" onClick={props.handleDoneBtn}>{ props.firstOption == undefined ? 'Done' : props.firstOption }</button>
+                    {props.secondOption != undefined && <button className="w-1/2 bg-red-500  ml-3 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-xl" onClick={props.secondOptionAction} > { props.secondOption  }</button>
+}
                  </div>
 
             </div>
