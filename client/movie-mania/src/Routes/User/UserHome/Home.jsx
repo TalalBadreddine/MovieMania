@@ -8,21 +8,24 @@ import styles from './Homecss.module.css'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Loading from '../../../Components/Loading/Loading'
+import {useNavigate} from 'react-router-dom'
 
 const Home = () => {
   const [movies, setMovies] = useState([]);
   const [movie, setMovie] = useState();
+  const navigate = useNavigate()
 
   useEffect(() => {async function fetchMovie(){
         
     axios.get('/user/Movies')
     .then((response) => { 
+        response.data == 'forbidden' && navigate('/')
          setMovies(response.data)
          setMovie(response.data[Math.floor(Math.random() * 20)])
 
     })
     .catch((err) => {
-      console.log(err)
+      if(err)navigate('/')
     })
   }
     fetchMovie();

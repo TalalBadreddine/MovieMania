@@ -42,6 +42,8 @@ const AdminBundles = () => {
         await axios.request('/admin/bundles')
             .then((data) => {
 
+                data.data == 'forbidden' && navigate('/')
+
                 let response = data.data.sort(function (a, b) {
                     return a.price - b.price
                 })

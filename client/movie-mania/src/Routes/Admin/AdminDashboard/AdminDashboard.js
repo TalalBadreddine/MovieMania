@@ -38,7 +38,7 @@ function AdminDashboard(req, res) {
 
             await axios.request('/admin/dashboard')
                 .then((resp) => {
-
+                    resp.data == 'forbidden' && navigate('/')
                     let data = resp.data
                     setfetchedData(data)
                     

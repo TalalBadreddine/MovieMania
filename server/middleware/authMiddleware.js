@@ -11,6 +11,15 @@ const {
 
 const validateUser = (req, res, next) => {
     const token = req.cookies.jwt
+    const uuid = req.cookies.uuid
+
+    if(uuid == undefined )return res.json('forbidden')
+
+    const userInfo = req.session[uuid]
+
+
+    if(userInfo == undefined)return res.json('forbidden')
+    
 
     if(token){
         jwt.verify(token, jwtSecret, async (err, decodedToken) => {
@@ -23,7 +32,7 @@ const validateUser = (req, res, next) => {
             }else{
                 
                 let role = decodedToken['role']
-                role == "user" ? next() : res.send('cannot go in')
+                role == "user" ? next() : res.send('forbidden')
 
             }
         })
@@ -37,6 +46,10 @@ const validateUser = (req, res, next) => {
 
 const validateAdmin = (req, res, next) => {
     const token = req.cookies.jwt
+
+    const uuid = req.cookies.uuid
+
+    if(uuid != undefined)return res.json('forbidden')
 
     if(token){
         jwt.verify(token, jwtSecret, async (err, decodedToken) => {
