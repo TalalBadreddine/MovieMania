@@ -21,8 +21,10 @@ const getAllMovies = async (req, res) => {
 
     try{ 
        let availbleBundles
+       let uniqueId = req.cookies.uuid
+       let currentUser = req.session[uniqueId]
 
-        await extensions.getUserThisMonthBundles(session.currentUserInfo.email).then( (response) => {
+        await extensions.getUserThisMonthBundles(currentUser.email).then( (response) => {
             availbleBundles = response
         })
 
@@ -75,8 +77,27 @@ const getAllMovies = async (req, res) => {
             if(!extensions.sessionHaveMovies()){
                 console.log("session don't have the movies")
                 extensions.getAllDetailsFromDb(moviesSchema).then( (results) => {
-                session.currentUserMovies = results
-                res.send(results)
+                    let allMoviesToReturn = []
+
+                    for(let i = 0 ; i < results.length; i++){
+
+                        let usedMovieData = {
+                            title: "",
+                            poster_path: "",
+                            id: "",
+                            genres: ""  
+                        }
+
+                        usedMovieData.title = results[i].title,
+                        usedMovieData.poster_path = results[i].poster_path,
+                        usedMovieData.id = results[i].id,
+                        usedMovieData.genres = results[i].genres
+
+                        allMoviesToReturn.push(usedMovieData)
+
+                    }
+                session.currentUserMovies = allMoviesToReturn
+                res.send(allMoviesToReturn)
                })
 
             }else{

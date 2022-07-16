@@ -6,32 +6,16 @@ import requests from '../../Request';
 import { FaPlay } from 'react-icons/fa';
 import {AiOutlineInfoCircle} from 'react-icons/ai'
 
-const Main = () => {
-    const [movies, setMovies] = useState([]);
-    const [movie, setMovie] = useState([]);
-
-    useEffect(() => {async function fetchMovie(){
-        
-        axios.get('/user/Movies')
-        .then((response) => { 
-             setMovies(response.data)
-            setMovie(response.data[1])
-            console.log(response.data)
-        })}
-        fetchMovie();
-    }, [])
-    
-
-
-
-    
+const Main = (props) => {
+    // const [movies, setMovies] = useState(props.movies);
+    const [movie, setMovie] = useState(props.movie);
     
 
   return (
     <div className='w-full h-[550px] text-white'>
         <div className='w-full h-full'>
             <div className='absolute w-96 h-[550px] bg-gradient-to-r from-black'></div>
-           {movie!=undefined && <img className='w-full h-full object-cover' src={`https://image.tmdb.org/t/p/w1280/${movie?.backdrop_path}`} alt={movie?.title} />}
+          <img className='w-full h-full object-cover' src={`https://image.tmdb.org/t/p/original/${movie?.poster_path}`} alt={movie?.title} />
             <div className='absolute w-100 top-[50%] ml-5 p-4 md:p-8'>
             <h1 className='text-4xl md:text-5xl font-bold'>
                 {movie?.title}</h1>
