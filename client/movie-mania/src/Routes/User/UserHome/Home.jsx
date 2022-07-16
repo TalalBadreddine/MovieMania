@@ -13,25 +13,61 @@ import {useNavigate} from 'react-router-dom'
 const Home = () => {
   const [movies, setMovies] = useState([]);
   const [movie, setMovie] = useState();
+  const [animation, setAnimation] = useState([])
+  const [comedy, setComedy] = useState([])
+  const [action, setAction] = useState([])
+
   const navigate = useNavigate()
 
   useEffect(() => {async function fetchMovie(){
         
-    axios.get('/user/Movies')
-    .then((response) => { 
+    await axios.get('/user/Movies')
+    .then(async (response) => { 
+
         response.data == 'forbidden' && navigate('/')
+        
+        for(let i = 0 ; i < response.data.length ; i++){
+          let currentMovie = response.data[i]
+          let genresOfMovie = currentMovie.genres.map((genre) => genre.name)
+
+          if(genresOfMovie.includes('Animation')){ 
+            let dummy = animation
+            dummy.push(currentMovie)
+            setAnimation(dummy)
+          }
+
+          else if(genresOfMovie.includes('Comedy')){
+            let dummy = comedy
+            dummy.push(currentMovie)
+            setComedy(dummy)
+          }
+
+          else if(genresOfMovie.includes('Action')){
+            let dummy = action
+            dummy.push(currentMovie)
+            setAction(dummy)
+          }
+
+   
+        }
+
          setMovies(response.data)
          setMovie(response.data[Math.floor(Math.random() * 20)])
 
     })
     .catch((err) => {
-      if(err)navigate('/')
+      if(err){
+        console.log(err)
+      }
     })
+
   }
+
     fetchMovie();
 }, [])
 
-if(movie == undefined){
+if(movie == undefined ){
+
   return <Loading></Loading>
 }
 
@@ -46,9 +82,16 @@ if(movie == undefined){
             </div>
             <br />
             <div className='ml-5'>
-            <Row title='Top Rated'  fetchURL={requests.requestTopRated}/>
-            <Row title='Horror'  fetchURL={requests.requestHorror}/>
-            <Row title='Trending'  fetchURL={requests.requestTrending}/>
+
+            {/* <Row title='Top Rated'  fetchURL={requests.requestTopRated}/>
+            <Row title='Horror'  fetchURL={requests.requestHorror} />
+            <Row title='Trending'  fetchURL={requests.requestTrending}/> */}
+
+            <Row title='Animation' moviesArr={animation}/>
+            <Row title='Comedy' moviesArr={action} />
+            <Row title='Action' moviesArr={comedy}/>
+            <Row title='All Movies' moviesArr={movies}/>
+
             </div>
         </div>
         

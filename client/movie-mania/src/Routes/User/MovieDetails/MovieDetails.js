@@ -6,12 +6,14 @@ import styles from './MovieDetailsCss.module.css'
 import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai'
 import {AiOutlineHeart, AiFillHeart,} from 'react-icons/ai'
 import {BiCheck} from 'react-icons/bi'
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import Notification from "../../../Components/Notification/Notification"
 
-const MovieDetail = (props) => {
+const MovieDetail = () => {
 
-    const { movieId } = props
+    const {state} = useLocation()
+
+    const { movieId } = state
 
     const navigate = useNavigate()
 
@@ -42,7 +44,7 @@ const MovieDetail = (props) => {
 
                 let userEnrolledMovies = resp.personalInfo.subscribedMovies
                 let userLikedMovies = resp.personalInfo.likedMovies
-
+ 
                 setIsMovieEnrolled( userEnrolledMovies.includes(`${movie.id}`) ? true : false )
                 setIsMovieLiked( userLikedMovies.includes(`${movie.id}`) ? true : false )
 

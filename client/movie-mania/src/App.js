@@ -53,9 +53,11 @@ function App() {
 
               <Route path='movies' element={<LazyUserHome/>} />
 
+              <Route path='movieDetails' element = {<LazyMovieDetails movieId='979163' key={'1'} />} />
+
+
               </Route>
 
-          <Route path='movies' element = {<LazyMovieDetails movieId='979163' key={'1'} />} />
           
           
       </Routes>
