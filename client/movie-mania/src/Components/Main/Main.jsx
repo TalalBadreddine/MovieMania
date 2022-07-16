@@ -5,10 +5,20 @@ import { useState } from 'react'
 import requests from '../../Request';
 import { FaPlay } from 'react-icons/fa';
 import {AiOutlineInfoCircle} from 'react-icons/ai'
+import { useNavigate } from 'react-router-dom';
 
 const Main = (props) => {
     // const [movies, setMovies] = useState(props.movies);
+    const navigate = useNavigate()
     const [movie, setMovie] = useState(props.movie);
+
+    const handleMoreInfoBtn = () => {
+
+        navigate('/user/movieDetails',{
+          state: { movieId: props.movie.id }
+        })
+    
+    }
     
 
   return (
@@ -19,9 +29,9 @@ const Main = (props) => {
             <div className='absolute w-100 top-[50%] ml-5 p-4 md:p-8'>
             <h1 className='text-4xl md:text-5xl font-bold'>
                 {movie?.title}</h1>
-            <div className='my-4' >
-                <button className='border bg-white opacity-90 text-black  border-gray-300 py-2 px-5'><FaPlay className='inline-block mr-3'/>Play</button>
-                <button className='border bg-white opacity-80 text-black border-gray-300 py-2 px-5 ml-4'><AiOutlineInfoCircle className='inline-block mr-1 text-xl'/>More Info</button>
+            <div className='my-4 mb-4' >
+                {/* <button className='border bg-white opacity-90 text-black  border-gray-300 py-2 px-5' ><FaPlay className='inline-block mr-3'/>Play</button> */}
+                <button className='border bg-white opacity-80 text-black border-gray-300 py-2 px-5 ml-4' onClick={handleMoreInfoBtn}><AiOutlineInfoCircle className='inline-block mr-1 text-xl'/>More Info</button>
             </div>
             </div>
         </div>

@@ -8,93 +8,155 @@ import styles from './Homecss.module.css'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Loading from '../../../Components/Loading/Loading'
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+
+let filterSkeleton = {
+  Action: false,
+  Comedy: false,
+  Romance: false,
+  Drama: false,
+  Horror: false,
+  Fantasy: false,
+  Family: false,
+  Animation: false,
+  'Science Fiction': false,
+  Thriller: false,
+  Crime: false,
+  Adventure: false,
+}
 
 const Home = () => {
   const [movies, setMovies] = useState([]);
   const [movie, setMovie] = useState();
-  const [animation, setAnimation] = useState([])
-  const [comedy, setComedy] = useState([])
-  const [action, setAction] = useState([])
+  const [topRated, setTopRated] = useState([])
+  const [mostViewed, setMostViewed] = useState([])
+  const [filtredMovies, setFiltredMovies] = useState()
+  const [moviesFilter, setMoviesFilter] = useState(filterSkeleton)
+  const [isFilterOn, setIsFilterOn] = useState(false)
 
   const navigate = useNavigate()
 
-  useEffect(() => {async function fetchMovie(){
-        
-    await axios.get('/user/Movies')
-    .then(async (response) => { 
+  useEffect(() => {
+    async function fetchMovie() {
 
-        response.data == 'forbidden' && navigate('/')
-        
-        for(let i = 0 ; i < response.data.length ; i++){
-          let currentMovie = response.data[i]
-          let genresOfMovie = currentMovie.genres.map((genre) => genre.name)
+      await axios.get('/user/Movies')
+        .then(async (response) => {
 
-          if(genresOfMovie.includes('Animation')){ 
-            let dummy = animation
-            dummy.push(currentMovie)
-            setAnimation(dummy)
+          response.data == 'forbidden' && navigate('/')
+
+          let moviesfetched1 = [...response.data]
+          let moviesfetched = [...response.data]
+
+          setMostViewed(moviesfetched1.sort((a, b) => {
+            return (a.popularity - b.popularity)
+          }))
+
+          setTopRated(moviesfetched.sort((a, b) => {
+            return (parseInt(b.rate) - parseInt(a.rate))
+          }))
+
+
+          setMovies(response.data)
+          setFiltredMovies(response.data)
+          setMovie(response.data[Math.floor(Math.random() * 20)])
+
+        })
+        .catch((err) => {
+          if (err) {
+            // console.log(err)
           }
+        })
 
-          else if(genresOfMovie.includes('Comedy')){
-            let dummy = comedy
-            dummy.push(currentMovie)
-            setComedy(dummy)
-          }
-
-          else if(genresOfMovie.includes('Action')){
-            let dummy = action
-            dummy.push(currentMovie)
-            setAction(dummy)
-          }
-
-   
-        }
-
-         setMovies(response.data)
-         setMovie(response.data[Math.floor(Math.random() * 20)])
-
-    })
-    .catch((err) => {
-      if(err){
-        console.log(err)
-      }
-    })
-
-  }
+    }
 
     fetchMovie();
-}, [])
+  }, [])
 
-if(movie == undefined ){
+  const handleCheckBox = (event) => {
+    let name = event.target.name
+    let value = !moviesFilter[name]
+    setMoviesFilter({ ...moviesFilter, [name]: value })
+  }
 
-  return <Loading></Loading>
-}
+  useEffect(() => {
+    let filterValues = Object.keys(moviesFilter).filter((filterKey) => moviesFilter[filterKey] == true)
+
+    if (filterValues.length == 0 && movies != undefined) {
+      setIsFilterOn(false)
+      return setFiltredMovies(movies)
+    }
+
+    setIsFilterOn(filterValues.length > 0)
+
+    let moviesMatchingFilter = []
+
+    for (let i = 0; i < movies.length; i++) {
+      let currentMovieGenres = []
+      let genres = movies[i].genres
+
+      for (let x = 0; x < genres.length; x++) {
+        currentMovieGenres.push(genres[x].name)
+
+      }
+
+
+      for (let j = 0; j < filterValues.length; j++) {
+
+        if (!currentMovieGenres.includes(`${filterValues[j]}`)) break
+        if (j == filterValues.length - 1) moviesMatchingFilter.push(movies[i])
+      }
+
+    }
+    setFiltredMovies(moviesMatchingFilter)
+  }, [moviesFilter])
+
+
+  if (movie == undefined || topRated == undefined || mostViewed == undefined) {
+
+    return <Loading></Loading>
+  }
 
   return (
     <div className={styles.pageContent}>
-        {<Main movies = {movies} movie = {movie} />}
-        <SearchBar /> 
-        <br />
-        <div className='flex'>
-            <div className='ml-5'>
-            <Filter />
-            </div>
+      {<Main movies={movies} movie={movie} />}
+      <SearchBar />
+      <br />
+      <div className='flex'>
+        <div className='ml-5'>
+          <div className='w-[230px]'>
+            <h2 className='underline text-white text-3xl ml-4'>Filter By Genre</h2>
             <br />
-            <div className='ml-5'>
-
-            {/* <Row title='Top Rated'  fetchURL={requests.requestTopRated}/>
-            <Row title='Horror'  fetchURL={requests.requestHorror} />
-            <Row title='Trending'  fetchURL={requests.requestTrending}/> */}
-
-            <Row title='Animation' moviesArr={animation}/>
-            <Row title='Comedy' moviesArr={action} />
-            <Row title='Action' moviesArr={comedy}/>
-            <Row title='All Movies' moviesArr={movies}/>
+            <div className='text-white ml-11 border-r border-black'>
+              {Object.keys(moviesFilter).map((key, val) => {
+                return (
+                  <div>
+                    <input type="checkbox" name={key} className='bg-gray-100 mb-3 opacity-40 w-4 h-4' onChange={handleCheckBox} />
+                    <label className='ml-2 text-lg'>{key}</label><br />
+                  </div>
+                )
+              })}
 
             </div>
+
+          </div>
         </div>
-        
+        <br />
+        <div className='ml-5'>
+
+
+
+          {!isFilterOn &&
+            <div>
+              <Row title='Top Rated' moviesArr={topRated} />
+              <Row title='Most Views' moviesArr={mostViewed} />
+            </div>
+          }
+
+          <Row title='All Movies' moviesArr={filtredMovies} />
+
+        </div>
+      </div>
+
     </div>
   )
 }

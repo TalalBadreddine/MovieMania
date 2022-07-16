@@ -18,11 +18,11 @@ const UserNavbar = () => {
   return (
     <div>
     <div className='flex items-center justify-between p-4 z-[100] absolute w-full'>
-        <h1 className='text-white text-2xl font-bold cursor-pointer'>Movie Mania</h1>
+        <Link to ="/user/movies" ><h1 className='text-white text-2xl font-bold cursor-pointer'>Movie Mania</h1></Link>
         <div className='inline-flex mr-10'>
             <ul className='text-white list-none inline-flex'>
 
-              <Link to='/user/movies' > <li className='pr-10'> News</li> </Link>
+              <Link to='/user/news' > <li className='pr-10'> News</li> </Link>
                 
          
                 <Link to='/user/profile' > <li className='pr-10'>Profile</li></Link>

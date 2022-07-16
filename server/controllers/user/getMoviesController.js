@@ -53,13 +53,17 @@ const getAllMovies = async (req, res) => {
                             title: "",
                             poster_path: "",
                             id: "",
-                            genres: ""  
+                            genres: "" ,
+                            popularity: "",
+                            rate: "",
                         }
                         await extensions.addToDb(moviesSchema, movieDetails)
                         usedMovieData.title = movieDetails.title,
                         usedMovieData.poster_path = movieDetails.poster_path,
                         usedMovieData.id = movieDetails.id,
                         usedMovieData.genres = movieDetails.genres
+                        usedMovieData.popularity = movieDetails.popularity
+                        usedMovieData.rate = movieDetails.vote_average
 
                         listOfAllMoviesDetails.push(usedMovieData)
                     })
@@ -85,13 +89,17 @@ const getAllMovies = async (req, res) => {
                             title: "",
                             poster_path: "",
                             id: "",
-                            genres: ""  
+                            genres: "",
+                            popularity: "",
+                            rate: "",  
                         }
 
                         usedMovieData.title = results[i].title,
                         usedMovieData.poster_path = results[i].poster_path,
                         usedMovieData.id = results[i].id,
                         usedMovieData.genres = results[i].genres
+                        usedMovieData.popularity = results[i].popularity
+                        usedMovieData.rate = results[i].vote_average
 
                         allMoviesToReturn.push(usedMovieData)
 
