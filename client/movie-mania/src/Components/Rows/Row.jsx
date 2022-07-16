@@ -8,8 +8,7 @@ const Row = ({ title, moviesArr}) => {
   const [movies, setMovies] = useState(moviesArr);
   const [seeMore, setSeeMore] = useState(title == 'All Movies')
   const [showMorePressed, setShowMorePressed] = useState(false)
-  console.log(seeMore)
-  console.log(moviesArr)
+
   // useEffect(() => {
   //   axios.get(fetchURL).then((response) => {
   //     setMovies(response.data.results.slice(0, 6));

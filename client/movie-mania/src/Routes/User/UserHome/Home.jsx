@@ -63,7 +63,7 @@ const Home = () => {
         })
         .catch((err) => {
           if (err) {
-            // console.log(err)
+            navigate('/')
           }
         })
 
@@ -111,7 +111,7 @@ const Home = () => {
   }, [moviesFilter])
 
 
-  if (movie == undefined || topRated == undefined || mostViewed == undefined) {
+  if (movie == undefined || topRated == undefined || mostViewed == undefined || mostViewed[5] == undefined ) {
 
     return <Loading></Loading>
   }
@@ -127,11 +127,11 @@ const Home = () => {
             <h2 className='underline text-white text-3xl ml-4'>Filter By Genre</h2>
             <br />
             <div className='text-white ml-11 border-r border-black'>
-              {Object.keys(moviesFilter).map((key, val) => {
+              {Object.keys(moviesFilter).map((keyVal, index) => {
                 return (
-                  <div>
-                    <input type="checkbox" name={key} className='bg-gray-100 mb-3 opacity-40 w-4 h-4' onChange={handleCheckBox} />
-                    <label className='ml-2 text-lg'>{key}</label><br />
+                  <div key={keyVal}>
+                    <input type="checkbox" name={keyVal}  className='bg-gray-100 mb-3 opacity-40 w-4 h-4' onChange={handleCheckBox} />
+                    <label className='ml-2 text-lg'>{keyVal}</label><br />
                   </div>
                 )
               })}
