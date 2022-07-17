@@ -14,6 +14,8 @@ const LazyLogout = React.lazy(() => import('./Components/Logout/Logout'))
 const LazyMovieDetails = React.lazy(() => import('./Routes/User/MovieDetails/MovieDetails'))
 const LazyUserNavbar = React.lazy(() => import('./Components/UserNavbar/UserNavbar'))
 const LazyUserHome = React.lazy(() => import('./Routes/User/UserHome/Home'))
+const LazyProfile = React.lazy(() => import('./Routes/User/Profile/Profile'))
+const LazyUserNews = React.lazy(() => import('./Routes/User/News/News'))
 
 function App() {
 
@@ -53,7 +55,13 @@ function App() {
 
               <Route path='movies' element={<LazyUserHome/>} />
 
+              <Route path='News' element={<LazyUserNews/>} />
+
+
+
               </Route>
+
+              <Route path='profile' element={<LazyProfile />} />
 
           <Route path='movies' element = {<LazyMovieDetails movieId='979163' key={'1'} />} />
           

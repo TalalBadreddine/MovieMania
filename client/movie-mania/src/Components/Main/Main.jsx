@@ -15,7 +15,7 @@ const Main = () => {
         axios.get('/user/Movies')
         .then((response) => { 
              setMovies(response.data)
-            setMovie(response.data[1])
+            setMovie(response.data[0])
             console.log(response.data)
         })}
         fetchMovie();

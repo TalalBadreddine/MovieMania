@@ -1,0 +1,22 @@
+.pageContent{
+    background-color: var(--maniaBlack);
+}
+.passwordButton{ 
+    background-color: var(--maniaRed);
+    color: white;
+    border-radius: 15px;
+    padding: 10px 110px 10px 110px;
+    font-weight: 600;
+    border: 1px solid white;
+    margin-left: 160px;
+}
+
+.saveButton { 
+    background-color: var(--maniaRed);
+    color: white;
+    border-radius: 15px;
+    padding: 10px 30px 10px 30px;
+}
+.password{ 
+    display: none;
+}
