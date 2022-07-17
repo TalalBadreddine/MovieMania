@@ -127,7 +127,7 @@ async function startServer(){
 
         app.use('/admin/movies',validateAdmin, moviesRouter); 
 
-        app.use('/user', getLikedMoviesRouter)
+        app.use('/user',validateUser, getLikedMoviesRouter)
 
         app.use('/Logout', (req, res) => {
             res.cookie('jwt', {maxAge: 0,httpOnly: true })

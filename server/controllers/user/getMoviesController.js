@@ -277,4 +277,33 @@ const getMovieById = async (req, res) => {
 
 }
 
-module.exports = {getAllMovies, getMoviesByGenre, likeMovieById, subscribeToMovieById, getMovieById}
+
+const getAllSubscribedMovies = async (req, res) => {
+    try{
+      
+        let uniqueId = req.cookies.uuid
+        const userEmail = req.session[uniqueId].email;
+        let subscribedMovies = []
+
+        await extensions.getThisMonthEnrolledMovies(userEmail)
+        .then(async (data) => {
+
+            for(let i = 0 ; i < data.length; i++){
+                await extensions.getMovieDetailById(data[i])
+                .then((resp) => {
+                    subscribedMovies.push(resp)
+                })
+            }
+
+        })
+
+
+        return res.send(subscribedMovies)
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
+
+module.exports = {getAllMovies, getMoviesByGenre, likeMovieById, subscribeToMovieById, getMovieById, getAllSubscribedMovies}
