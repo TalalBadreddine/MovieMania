@@ -63,10 +63,10 @@ const Home = () => {
         })
         .catch((err) => {
           if (err) {
+            console.log(err)
             navigate('/')
           }
         })
-
     }
 
     fetchMovie();

@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     },
     age: {
         type: Number,
-      required: true
+    //   required: true
     },
     gender: {
         type: String,
@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-       required: true
+    //    required: true
     },
     registrationDate: {
         type: Date,
@@ -61,13 +61,13 @@ userSchema.pre('save', async function(next) {
         response == false && next(new Error("Error: Last Name Don't Match Validation rules"))
     })
 
-    validate.validatePassword(password).then( (response) => {
-        response == false && next(new Error("Error: Password Don't Match Validation rules"))
-    })
+    // validate.validatePassword(password).then( (response) => {
+    //     response == false && next(new Error("Error: Password Don't Match Validation rules"))
+    // })
 
-    validate.validateAge(age).then( (response) => {
-        response == false && next(new Error("Error: Age Don't match Validation rules"))
-    })
+    // validate.validateAge(age).then( (response) => {
+    //     response == false && next(new Error("Error: Age Don't match Validation rules"))
+    // })
 
     validate.validateEmail(email).then( (response) => {
         response == false && next(new Error("Error: Email Don't match Validation rules"))

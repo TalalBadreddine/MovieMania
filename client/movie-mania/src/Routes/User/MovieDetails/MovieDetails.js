@@ -8,6 +8,7 @@ import {AiOutlineHeart, AiFillHeart,} from 'react-icons/ai'
 import {BiCheck} from 'react-icons/bi'
 import { useNavigate, useLocation } from "react-router-dom"
 import Notification from "../../../Components/Notification/Notification"
+import Loading from "../../../Components/Loading/Loading"
 
 const MovieDetail = () => {
 
@@ -39,13 +40,14 @@ const MovieDetail = () => {
             movieId: movieId
         })
         .then(async (data) => {
+            console.log(data)
                 let resp = data.data
                 let movie = resp.movieDetails[0]
 
                 let userEnrolledMovies = resp.personalInfo.subscribedMovies
                 let userLikedMovies = resp.personalInfo.likedMovies
  
-                setIsMovieEnrolled( userEnrolledMovies.includes(`${movie.id}`) ? true : false )
+                userEnrolledMovies && setIsMovieEnrolled( userEnrolledMovies.includes(`${movie.id}`) ? true : false )
                 setIsMovieLiked( userLikedMovies.includes(`${movie.id}`) ? true : false )
 
                 let alltrailers = movie.videos.results.filter((video) => video.type == 'Trailer')
@@ -109,7 +111,7 @@ const MovieDetail = () => {
 
     if (!movieDetails || ! currentVideoLink) {
         return (
-            <h1>Loading</h1>
+            <Loading></Loading>
         )
     }
     return (

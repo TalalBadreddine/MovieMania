@@ -1,8 +1,10 @@
-import {Routes, Route} from 'react-router-dom'
+import {Routes, Route, useNavigate} from 'react-router-dom'
 import Landing from '../src/Routes/Landing/Landing';
 import './CommunColors.css'
-import React from 'react'
+import React,{useEffect} from 'react'
 import Loading from './Components/Loading/Loading';
+import jwt_decode from 'jwt-decode'
+import axios from 'axios';
 
 const LazyAdminNavBar = React.lazy(() => import('./Components/AdminNavBar/AdminNavBar'))
 const LazySuccess = React.lazy(() => import('./Components/Success/Success'))
@@ -18,6 +20,41 @@ const LazyUserHome = React.lazy(() => import('./Routes/User/UserHome/Home'))
 const LazyMyMovies = React.lazy(() => import('./Routes/User/MyMovies/MyMovies')) 
 
 function App() {
+
+  const navigate = useNavigate()
+
+  const handleGoogleCallBack = async (resp) => {
+
+    const userInfo = jwt_decode(resp.credential)
+
+    axios.post('/googleLogin',{
+      firstName: userInfo.given_name,
+      lastName: userInfo.family_name,
+      email: userInfo.email
+    })
+    .then(async (data) => {
+      let resp = data.data
+      console.log(resp)
+      if(resp == 'done') return navigate('/payments')
+      return navigate('/user/movies')
+    })
+
+  }
+
+  useEffect(() => {
+    /* global google */
+    
+    google.accounts.id.initialize({
+      client_id: "1079385549367-dtetskd0vu0373kfneufj2qh130de01k.apps.googleusercontent.com",
+      callback: handleGoogleCallBack
+    })
+
+    google.accounts.id.renderButton(
+      document.getElementById('signInDiv'),
+      {theme: 'outline', size: 'large'}
+    )
+
+  },[])
 
   return (
     <React.StrictMode>

@@ -20,9 +20,11 @@ const {
 const getAllMovies = async (req, res) => {
 
     try{ 
+        console.log('test')
        let availbleBundles
        let uniqueId = req.cookies.uuid
        let currentUser = req.session[uniqueId]
+        console.log(currentUser)
 
         await extensions.getUserThisMonthBundles(currentUser.email).then( (response) => {
             availbleBundles = response
