@@ -68,7 +68,7 @@ html {
 } */
 
 .getStartedButton{
-  margin-left: 20% !important;
+  margin-left: 25% !important;
   background-color: var(--maniaGreen);
   color: var(--maniaWhite);
 }
@@ -90,6 +90,9 @@ html {
 .bigParent{
   height: 100% !important;
 }
+
+
+
 
 @media screen and (max-width:700px) {
 

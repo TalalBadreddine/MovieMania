@@ -245,7 +245,7 @@ const AdminBundles = () => {
     }
 
     return (
-        <div className={["h-screen w-screen p-10", styles.allContentContainer].join(' ')}>
+        <div className={["h-full w-full p-10", styles.allContentContainer].join(' ')}>
 
             <div className='text-center text-4xl text-white'>
                 <h1>Table of Bundles</h1>
@@ -273,7 +273,7 @@ const AdminBundles = () => {
 
                     <div className='w-4/6'>
 
-                        <table className={["w-full rounded-xl", styles.bundlesTable].join(' ')}>
+                        <table className={["w-full h-full rounded-xl", styles.bundlesTable].join(' ')}>
                             <thead className="flex text-white w-full">
                                 <tr className="flex w-full mb-4 pt-4 text-2xl">
                                     <th className=" w-1/4">Title</th>
@@ -340,7 +340,7 @@ const AdminBundles = () => {
                             </div>
 
                             {currentBundle.btn == 'Edit' &&
-                                <button className='mb-7 w-auto font-bold px-2 rounded-full m-auto text-center text-white font-normal text-blue-600 hover:underline hover:cursor-pointer text-md' onClick={handleAddNewBundle}>Add new bundle</button>
+                                <button className='mb-7 w-auto px-2 rounded-full m-auto text-center font-normal text-blue-600 hover:underline hover:cursor-pointer text-md' onClick={handleAddNewBundle}>Add new bundle</button>
                             }
 
                             <div className={[' w-32 font-bold py-2 px-10 text-xl rounded-full m-auto text-center text-white', styles.addEditBundleBtn].join(' ')} >

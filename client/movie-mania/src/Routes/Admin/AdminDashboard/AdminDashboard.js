@@ -225,7 +225,7 @@ function AdminDashboard(req, res) {
 
                         <h1 className='text-3xl p-2'>Top Movies:</h1>
 
-                        <div className='overflow-scroll w-auto h-3/4 p-3'>
+                        <div className='overflow-auto w-auto h-3/4 p-3'>
                             {topMovies}
                         </div>
 
@@ -234,7 +234,7 @@ function AdminDashboard(req, res) {
                 </div>
 
 
-                <div className={["w-64 h-auto rounded-xl text-white mt-2 p-4 ", styles.graph].join(' ')} >
+                <div className={["w-auto h-auto rounded-xl text-white mt-2 p-4 ", styles.graph].join(' ')} >
 
                     {Object.values(bundlesStatistics).length > 0 ?
 

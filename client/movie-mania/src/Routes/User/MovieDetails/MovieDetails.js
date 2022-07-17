@@ -48,7 +48,7 @@ const MovieDetail = () => {
                 let userLikedMovies = resp.personalInfo.likedMovies
  
                 userEnrolledMovies && setIsMovieEnrolled( userEnrolledMovies.includes(`${movie.id}`) ? true : false )
-                setIsMovieLiked( userLikedMovies.includes(`${movie.id}`) ? true : false )
+                setIsMovieLiked( userLikedMovies.includes(movie.id) ? true : false )
 
                 let alltrailers = movie.videos.results.filter((video) => video.type == 'Trailer')
                 let likeTrailers = movie.videos.results.filter((video) => video.type != 'Trailer')
@@ -66,6 +66,8 @@ const MovieDetail = () => {
         
 
     }, [])
+
+    
 
     
 

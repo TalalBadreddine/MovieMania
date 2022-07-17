@@ -34,7 +34,7 @@ const Bundles = () => {
     return(
         <div>
             <h1 className="text-5xl text-center mt-10 font-mono">Our Bundles</h1>
-            <div className="flex gap-10 mt-2 mx-12 h-screen flex-wrap">
+            <div className="flex gap-5 mt-2 mx-12 h-screen flex-wrap">
             {dataFetched.map((data, index) => {
             return <Bundle info ={data} key={index} iconIndex={index} ></Bundle>
         })}

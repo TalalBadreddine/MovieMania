@@ -34,6 +34,8 @@ const Home = () => {
   const [moviesFilter, setMoviesFilter] = useState(filterSkeleton)
   const [isFilterOn, setIsFilterOn] = useState(false)
 
+  const [searchValue, setSearchValue] = useState("")
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -71,6 +73,30 @@ const Home = () => {
 
     fetchMovie();
   }, [])
+
+      const handleSearch = (e) => {
+        setSearchValue(e.target.value.toLowerCase())
+    }
+
+    useEffect(() => {
+
+      if(searchValue.trim() == ""){ 
+        setFiltredMovies(movies)
+        setIsFilterOn(false)
+        return
+      }
+
+      let searchedMovies = (movies.filter(movie => { 
+       return movie.title.toLowerCase().includes(searchValue)   
+      }))
+
+      setFiltredMovies(searchedMovies)
+      console.log(searchedMovies)
+      setIsFilterOn(true)
+
+    }, [searchValue])
+
+
 
   const handleCheckBox = (event) => {
     let name = event.target.name
@@ -119,7 +145,7 @@ const Home = () => {
   return (
     <div className={styles.pageContent}>
       {<Main movies={movies} movie={movie} />}
-      <SearchBar />
+      <SearchBar  action={handleSearch}/>
       <br />
       <div className='flex'>
         <div className='ml-5'>

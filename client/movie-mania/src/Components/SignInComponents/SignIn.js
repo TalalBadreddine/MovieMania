@@ -149,10 +149,10 @@ const SignIn = () => {
             return
         }
 
-        if (age < 18 || age > 100) {
-            setErrorRegister({ ...errorRegister, ['errorContentRegister']: 'Our movies not suitable for your age', ['errorClassRegister']: errorClassRegister.replace('hidden', '') })
-            return
-        }
+        // if (age < 18 || age > 100) {
+        //     setErrorRegister({ ...errorRegister, ['errorContentRegister']: 'Our movies not suitable for your age', ['errorClassRegister']: errorClassRegister.replace('hidden', '') })
+        //     return
+        // }
 
         if (registerPassword != rePassword) {
             setErrorRegister({ ...errorRegister, ['errorContentRegister']: 'Passwords does not match', ['errorClassRegister']: errorClassRegister.replace('hidden', '') })
@@ -204,7 +204,7 @@ const SignIn = () => {
 
             <div className="w-full">
 
-                <form className="bg-white shadow-md rounded-lg px-12 pt-6 pt-12 pb-20 mb-4" onSubmit={handleSubmitSignIn}>
+                <form className="bg-white shadow-md rounded-lg px-12 pt-12 pb-20 mb-4" onSubmit={handleSubmitSignIn}>
 
                     <div className={divContentClass}>
 
@@ -234,7 +234,11 @@ const SignIn = () => {
 
                         <div className="items-center justify-between mt-10 ">
 
-                            <div className="w-full mt-10 mb-4"><div id='signInDiv' className="mt-5"></div></div>
+                            <div className="w-full mt-10 mb-4"><div id='signInDiv' className="mt-5">
+                                
+                                </div>
+                                
+                                    </div>
 
 
                             <button className=" w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="Submit">
@@ -265,7 +269,7 @@ const SignIn = () => {
 
             <div className="w-full">
 
-                <form className="bg-white shadow-md rounded-lg px-12 pt-6 pt-6 pb-8 mb-2" onSubmit={handleSubmitRegister}>
+                <form className="bg-white shadow-md rounded-lg px-12 pt-3 pb-4 mb-2" onSubmit={handleSubmitRegister}>
 
 
                     <h1 className=" text-3xl mb-4 font-bold text-center text-black ">Register</h1>
@@ -292,12 +296,12 @@ const SignIn = () => {
                         <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="Last name" onChange={handleChange} name="registerEmail" value={registerEmail} required />
                     </div>
 
-                    <div className="mb-2">
+                    {/* <div className="mb-2">
                         <label className="block text-gray-700 text-sm font-bold mb-2">
                             Age
                         </label>
                         <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="number" placeholder="Age" onChange={handleChange} name="age" value={age} required />
-                    </div>
+                    </div> */}
 
                     <div className="mb-2">
                         <label className="block text-gray-700 text-sm font-bold mb-2">

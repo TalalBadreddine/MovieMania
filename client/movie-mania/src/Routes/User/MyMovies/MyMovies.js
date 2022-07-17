@@ -43,7 +43,7 @@ const MyMovies = () => {
     }, [])
 
     const handleSearch = (event) => {
-        let value = event.target.value
+        let value = event.target.value.toLowerCase()
         setSearch(value)
 
         if (value.trim() == '') {
@@ -52,8 +52,8 @@ const MyMovies = () => {
             return
         }
 
-        setFilteredEnrolledMovies(enrolledMovies.filter((currentMovies) => { return currentMovies.title.includes(value) }))
-        setFilteredLikedMovies(likedMovies.filter((currentMovies) => { return currentMovies.title.includes(value) }))
+        setFilteredEnrolledMovies(enrolledMovies.filter((currentMovies) => { return currentMovies.title.toLowerCase().includes(value) }))
+        setFilteredLikedMovies(likedMovies.filter((currentMovies) => { return currentMovies.title.toLowerCase().includes(value) }))
 
     }
 
