@@ -2,6 +2,7 @@ import {Routes, Route} from 'react-router-dom'
 import Landing from '../src/Routes/Landing/Landing';
 import './CommunColors.css'
 import React from 'react'
+import Loading from './Components/Loading/Loading';
 
 const LazyAdminNavBar = React.lazy(() => import('./Components/AdminNavBar/AdminNavBar'))
 const LazySuccess = React.lazy(() => import('./Components/Success/Success'))
@@ -19,10 +20,11 @@ const LazyMyMovies = React.lazy(() => import('./Routes/User/MyMovies/MyMovies'))
 function App() {
 
   return (
+    <React.StrictMode>
     <div className="App">
 
 
-    <React.Suspense fallback='Loading ...'>
+    <React.Suspense fallback={<Loading></Loading>}>
       
       <Routes>
         
@@ -61,14 +63,14 @@ function App() {
 
 
               </Route>
-
-          
           
       </Routes>
 
       </React.Suspense>
  
     </div>
+    </React.StrictMode>
+
   );
 }
 

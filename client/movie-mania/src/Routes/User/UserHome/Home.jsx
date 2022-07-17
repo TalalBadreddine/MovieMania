@@ -111,7 +111,7 @@ const Home = () => {
   }, [moviesFilter])
 
 
-  if (movie == undefined || topRated == undefined || mostViewed == undefined || mostViewed[5] == undefined ) {
+  if (movies[99] == undefined || topRated == undefined || mostViewed == undefined || mostViewed[5] == undefined ) {
 
     return <Loading></Loading>
   }
