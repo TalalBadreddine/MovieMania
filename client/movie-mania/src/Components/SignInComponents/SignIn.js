@@ -232,13 +232,15 @@ const SignIn = () => {
                             <span className={errorClass}><span className="animate-bounce mr-1"><BiError size={20}></BiError></span><span className="text-red-500 text-sm ml-1">{errorContent}</span></span>
                         </div>
 
-                        <div className="items-center justify-between mt-4 ">
+                        <div className="items-center justify-between mt-10 ">
 
-                            <button className=" w-full mt-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="Submit">
+                            <div className="w-full mt-10 mb-4"><div id='signInDiv' className="mt-5"></div></div>
+
+
+                            <button className=" w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="Submit">
                                 Sign In
                             </button>
 
-                           <div className="w-full mt-10 mb-4"><div id='signInDiv' className="mt-5"></div></div> 
 
 
                             {/* <button className=" w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-8" type="button">
