@@ -18,7 +18,7 @@ const AdminNavBar = () => {
         <>
             <div className={["flex justify-end px-10 text-2xl py-2 bg-transparent", styles.navContainer].join(' ')}>
 
-                <div className="flex w-2/3 justify-end space-x-20  ">
+                <div className="flex hover:text-white w-2/3 justify-end space-x-20  ">
                     <Link to = '/admin/dashboard' className={['p-3',styles.newNavPath].join(' ')}>Dashboard</Link>
                     <Link to = '/admin/users' className={['p-3',styles.newNavPath].join(' ')}>Users</Link>
                     <Link to = '/admin/movies' className={['p-3',styles.newNavPath].join(' ')}>Movies</Link>

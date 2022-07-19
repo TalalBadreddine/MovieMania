@@ -1,7 +1,7 @@
 .navContainer{
-    background-color: var(--maniaBlack);
-    color: rgba(255, 255, 255, 0.775);
-    border-bottom: .3px solid rgba(0, 0, 0, 0.3)
+    background-color: var(--maniaBlack) !important;
+    color: rgba(255, 255, 255, 0.775) !important;
+    border-bottom: .3px solid rgba(0, 0, 0, 0.3) !important;
 }
 
 .newNavPath:hover{

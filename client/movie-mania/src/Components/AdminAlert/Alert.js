@@ -2,7 +2,7 @@ import React from "react";
 
 function Alert({message, show}) {
   return (
-    <div className="alert alert-success" role="alert" style={{display: show ? "block": "none" }}>
+    <div className="alert absolute alert-light" role="alert" style={{display: show ? "block": "none" }}>
     {message}
   </div>
   );

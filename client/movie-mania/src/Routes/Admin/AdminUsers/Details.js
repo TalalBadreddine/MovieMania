@@ -43,7 +43,7 @@ function Details() {
   }, []);
 
   return (
-    <div className="container bg-dark mt-4 col-12 col-lg-4">
+    <div className="w-screen bg-dark h-screen pt-12 text-white px-32 col-12 col-lg-4">
       <form onSubmit={onSubmitHandler}>
         <InputGroup
           label="email"
@@ -77,7 +77,7 @@ function Details() {
           errors={errors.age}
           value={form.age}
         />
-        <button className="btn btn-primary" type="submit">
+        <button className="btn bg-dark btn-primary" type="submit">
           Add user
         </button>
       </form>

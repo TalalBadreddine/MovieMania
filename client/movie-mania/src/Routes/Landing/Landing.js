@@ -4,9 +4,9 @@ import SignIn from "../../Components/SignInComponents/SignIn";
 import { Outlet } from "react-router-dom";
 
 const Landing = () => {
-    const [leftDivClass, setLeftDivClass] = useState("w-auto hidden h-1/2 mt-7")
+    const [leftDivClass, setLeftDivClass] = useState("w-auto hidden h-1/2 mt-20")
     const [middleDivClass, setMiddleDivClass] = useState("w-1/2 h-1/2 m-auto titleContainer ")
-    const [rightDivClass, setRightDivClass] = useState("w-96  hidden mt-7")
+    const [rightDivClass, setRightDivClass] = useState("w-96  hidden mt-20")
 
     const handleGetStarted = (e) => {
         e.preventDefault()
@@ -48,11 +48,10 @@ const Landing = () => {
 
                 <div className={rightDivClass}>
                     <h1 className="text-2xl text-center mb-10 ">Who are we</h1>
-                    <p className="text-xl leading-loose font-mono">                                                                                       no-unused-vars
-                        Line 14:11:  'handleChange' is assigned a value but never used                                                                                                                                                                                                                                                                                                                  no-unused-vars
-                        Line 57:7:   The href attribute requires a valid value to be accessible. Provide a valid, navigable address as the href value. If you cannot provide a valid href, but still need the element to resemble a link, use a button and change it with appropriate styles. Learn more: https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/HEAD/docs/rules/anchor-is-valid.md  jsx-a11y/anchor-is-valid
-                        Line 14:11:  'handleChange' is assigned a value but never used                                                                                                                                                                                                                                                                                                                  no-unused-vars
-                        Line 14:11:  'handleChange' is assigned a value but never used                                                                                                                                                                                                                                                                                                                  no-unused-vars
+                    <p className="text-xl leading-loose font-mono">                                                                                      
+                    Movie Mania is a Lebanese subscription streaming service that was built and profound on Team work and consistency.
+                    Our goal is to entertain the world. Whatever your taste, and no matter where you live, we give you access to best-in-class movies. Our members control what they want to watch, when they want it, ad free, in one simple subscription, on an internet-connected devices.
+                                                                                                                                                                                                                                                                                 no-unused-vars
 
                     </p>
                 </div>

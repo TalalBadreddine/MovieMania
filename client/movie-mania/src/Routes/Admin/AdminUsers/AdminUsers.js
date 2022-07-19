@@ -20,6 +20,10 @@ const AdminUsers = () => {
 
   /*    Submit info for database   */
   /*    create new users  */
+
+    useEffect(() => { 
+      
+    })
   const onSubmitHandler = (e) => {
     e.preventDefault();
     axios
@@ -63,10 +67,9 @@ const AdminUsers = () => {
   };
 
   return (
-    <div className="row bg-dark p-4">
+    <div className="row bg-dark text-white h-screen p-4 ">
       <Alert message={message} show={show} />
-      <div className="mt-4">
-        <h2>Crud Users</h2>
+      <div className="">
       </div>
       <div className="col-12 col-lg-4">
         <form onSubmit={onSubmitHandler}>
@@ -104,7 +107,7 @@ const AdminUsers = () => {
         </form>
       </div>
       <div className="col-12 col-lg-7">
-        <table className="table">
+        <table className="table text-white">
           <thead>
             <tr>
               <th scope="col">Email</th>
@@ -130,6 +133,7 @@ const AdminUsers = () => {
           </tbody>
         </table>
       </div>
+      <br /><br /><br /><br />
     </div>
   );
 };
