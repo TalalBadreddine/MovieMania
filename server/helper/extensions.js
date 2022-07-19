@@ -679,6 +679,7 @@ async function getAllUserRelationsWithBundles(currentUserEmail, currentUserId = 
 
 
 module.exports = {
+    getUserInfo,
     sessionHaveMovies,
     sessionHaveUpcomingMovies,
     sessionHaveLikedMovies,

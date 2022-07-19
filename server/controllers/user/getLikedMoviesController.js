@@ -53,36 +53,44 @@ const getUserLikedMoviesFromDB = async (req, res) => {
 
         let moviesId = []
         let likedMoviesArray = []
-        let unlikedMoviesArray = []
+        // let unlikedMoviesArray = []
         let moviesCount = await moviesSchema.count()
+        let uniqueId = req.cookies.uuid
         let j = 0
         let k=0
-        const userId = req.params.userId;
+        const userId = req.session[uniqueId]._id;
 
-        if (!extensions.sessionHaveLikedMovies()) {
+        // if (!extensions.sessionHaveLikedMovies()) {
 
-            console.log("session don't have the user liked movies")
-            const liked = await userSchema.find({ _id: userId })
-            const movies = await moviesSchema.find()
+            // console.log("session don't have the user liked movies")
+            const likedMovies = await userSchema.find({ _id: userId },{
+                likedMovies: 1
+            })
+            // const movies = await moviesSchema.find()
+            
 
-            for (let i = 0; i < moviesCount; i++) {
-
-                moviesId[i] = movies[i]._id
+            for (let i = 0; i < likedMovies[0].likedMovies.length; i++) {
+                await extensions.getMovieDetailById(likedMovies[0].likedMovies[i])
+                .then(async (data) => {
+                    await likedMoviesArray.push(data)
+                })
 
             }
 
-             likedMoviesArray = liked[0].likedMovies
-             unlikedMoviesArray = moviesId.filter(f => !likedMoviesArray.includes(f));
-            
-            session.currentUserLikedMovies = likedMoviesArray
-            session.currentUserUnLikedMovies = unlikedMoviesArray
-            res.send( session.currentUserLikedMovies)
-            
-        } else {
+            return res.send(likedMoviesArray)
 
-            res.send(session.currentUserLikedMovies)
+            //  likedMoviesArray = liked[0].likedMovies
+            //  unlikedMoviesArray = moviesId.filter(f => !likedMoviesArray.includes(f));
+            
+            // session.currentUserLikedMovies = likedMoviesArray
+            // session.currentUserUnLikedMovies = unlikedMoviesArray
+            // res.send( session.currentUserLikedMovies)
+            
+        // } else {
 
-        }
+        //     res.send(session.currentUserLikedMovies)
+
+        // }
     } catch (err) {
         console.log(err.message)
     }

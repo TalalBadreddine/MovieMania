@@ -20,9 +20,13 @@ const {
 const getAllMovies = async (req, res) => {
 
     try{ 
+        console.log('test')
        let availbleBundles
+       let uniqueId = req.cookies.uuid
+       let currentUser = req.session[uniqueId]
+        console.log(currentUser)
 
-        await extensions.getUserThisMonthBundles(session.currentUserInfo.email).then( (response) => {
+        await extensions.getUserThisMonthBundles(currentUser.email).then( (response) => {
             availbleBundles = response
         })
 
@@ -47,8 +51,23 @@ const getAllMovies = async (req, res) => {
                     let currentMovieId = results[i]
                     
                    await  extensions.getMovieDetailById(currentMovieId).then(async (movieDetails) => {
+                        let usedMovieData = {
+                            title: "",
+                            poster_path: "",
+                            id: "",
+                            genres: "" ,
+                            popularity: "",
+                            rate: "",
+                        }
                         await extensions.addToDb(moviesSchema, movieDetails)
-                        listOfAllMoviesDetails.push(movieDetails)
+                        usedMovieData.title = movieDetails.title,
+                        usedMovieData.poster_path = movieDetails.poster_path,
+                        usedMovieData.id = movieDetails.id,
+                        usedMovieData.genres = movieDetails.genres
+                        usedMovieData.popularity = movieDetails.popularity
+                        usedMovieData.rate = movieDetails.vote_average
+
+                        listOfAllMoviesDetails.push(usedMovieData)
                     })
                     
 
@@ -64,8 +83,31 @@ const getAllMovies = async (req, res) => {
             if(!extensions.sessionHaveMovies()){
                 console.log("session don't have the movies")
                 extensions.getAllDetailsFromDb(moviesSchema).then( (results) => {
-                session.currentUserMovies = results
-                res.send(results)
+                    let allMoviesToReturn = []
+
+                    for(let i = 0 ; i < results.length; i++){
+
+                        let usedMovieData = {
+                            title: "",
+                            poster_path: "",
+                            id: "",
+                            genres: "",
+                            popularity: "",
+                            rate: "",  
+                        }
+
+                        usedMovieData.title = results[i].title,
+                        usedMovieData.poster_path = results[i].poster_path,
+                        usedMovieData.id = results[i].id,
+                        usedMovieData.genres = results[i].genres
+                        usedMovieData.popularity = results[i].popularity
+                        usedMovieData.rate = results[i].vote_average
+
+                        allMoviesToReturn.push(usedMovieData)
+
+                    }
+                session.currentUserMovies = allMoviesToReturn
+                res.send(allMoviesToReturn)
                })
 
             }else{
@@ -237,4 +279,33 @@ const getMovieById = async (req, res) => {
 
 }
 
-module.exports = {getAllMovies, getMoviesByGenre, likeMovieById, subscribeToMovieById, getMovieById}
+
+const getAllSubscribedMovies = async (req, res) => {
+    try{
+      
+        let uniqueId = req.cookies.uuid
+        const userEmail = req.session[uniqueId].email;
+        let subscribedMovies = []
+
+        await extensions.getThisMonthEnrolledMovies(userEmail)
+        .then(async (data) => {
+
+            for(let i = 0 ; i < data.length; i++){
+                await extensions.getMovieDetailById(data[i])
+                .then((resp) => {
+                    subscribedMovies.push(resp)
+                })
+            }
+
+        })
+
+
+        return res.send(subscribedMovies)
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
+
+module.exports = {getAllMovies, getMoviesByGenre, likeMovieById, subscribeToMovieById, getMovieById, getAllSubscribedMovies}

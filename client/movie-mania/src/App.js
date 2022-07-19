@@ -1,16 +1,10 @@
-import {Routes, Route} from 'react-router-dom'
+import {Routes, Route, useNavigate} from 'react-router-dom'
 import Landing from '../src/Routes/Landing/Landing';
 import './CommunColors.css'
-import React from 'react'
-// import AdminNavBar from './Components/AdminNavBar/AdminNavBar';
-// import Success from './Components/Success/Success';
-// import AdminMovies from './Routes/Admin/AdminMovies/AdminMovies'
-// import AdminDashboard from './Routes/Admin/AdminDashboard/AdminDashboard';
-// import AdminUsers from './Routes/Admin/AdminUsers/AdminUsers';
-// import Bundles from './Routes/Bundles/Bundles';
-// import AdminBundles from './Routes/Admin/AdminBundles/AdminBundles';
-// import Logout from './Components/Logout/Logout';
-// import MovieDetail from './Routes/User/MovieDetails/MovieDetails';
+import React,{useEffect} from 'react'
+import Loading from './Components/Loading/Loading';
+import jwt_decode from 'jwt-decode'
+import axios from 'axios';
 
 const LazyAdminNavBar = React.lazy(() => import('./Components/AdminNavBar/AdminNavBar'))
 const LazySuccess = React.lazy(() => import('./Components/Success/Success'))
@@ -21,14 +15,53 @@ const LazyBundles = React.lazy(() => import('./Routes/Bundles/Bundles'))
 const LazyAdminBundles = React.lazy(() => import('./Routes/Admin/AdminBundles/AdminBundles'))
 const LazyLogout = React.lazy(() => import('./Components/Logout/Logout'))
 const LazyMovieDetails = React.lazy(() => import('./Routes/User/MovieDetails/MovieDetails'))
+const LazyUserNavbar = React.lazy(() => import('./Components/UserNavbar/UserNavbar'))
+const LazyUserHome = React.lazy(() => import('./Routes/User/UserHome/Home'))
+const LazyMyMovies = React.lazy(() => import('./Routes/User/MyMovies/MyMovies')) 
 
 function App() {
 
+  const navigate = useNavigate()
+
+  const handleGoogleCallBack = async (resp) => {
+
+    const userInfo = jwt_decode(resp.credential)
+
+    axios.post('/googleLogin',{
+      firstName: userInfo.given_name,
+      lastName: userInfo.family_name,
+      email: userInfo.email
+    })
+    .then(async (data) => {
+      let resp = data.data
+      console.log(resp)
+      if(resp == 'done') return navigate('/payments')
+      return navigate('/user/movies')
+    })
+
+  }
+
+  useEffect(() => {
+    /* global google */
+    
+    google.accounts.id.initialize({
+      client_id: "1079385549367-dtetskd0vu0373kfneufj2qh130de01k.apps.googleusercontent.com",
+      callback: handleGoogleCallBack
+    })
+
+    google.accounts.id.renderButton(
+      document.getElementById('signInDiv'),
+      {theme: 'outline', size: 'large'}
+    )
+
+  },[])
+
   return (
+    <React.StrictMode>
     <div className="App">
 
 
-    <React.Suspense fallback='Loading ...'>
+    <React.Suspense fallback={<Loading></Loading>}>
       
       <Routes>
         
@@ -56,14 +89,25 @@ function App() {
 
           </Route>
 
-          <Route path='movies' element = {<LazyMovieDetails movieId='979163' key={'1'} />} />
-          
+            <Route path='user' element={<LazyUserNavbar />} > 
+
+              <Route path='movies' element={<LazyUserHome/>} />
+
+              <Route path='movieDetails' element = {<LazyMovieDetails movieId='979163' key={'testing'} />} />
+
+              <Route path='myMovies' element = {<LazyMyMovies />} />
+
+
+
+              </Route>
           
       </Routes>
 
       </React.Suspense>
  
     </div>
+    </React.StrictMode>
+
   );
 }
 

@@ -41,6 +41,7 @@ const loginFunc = async (req, res, next) => {
         _id:1,
         likedMovies: 1
     })
+    
 
     
     if(results.length == 1){
@@ -71,7 +72,7 @@ const loginFunc = async (req, res, next) => {
             res.json(true)
             // res.status(201).json(token)
         })
-        
+       
 
     }else{
         return res.json(false)

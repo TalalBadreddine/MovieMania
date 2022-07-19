@@ -19,7 +19,7 @@ likedMoviesRouter.put('/:userId/:movieId/removeLike',removeLikedMovie)
 likedMoviesRouter.get('/session/movies',getAllMoviesFromDB)
 
 
-likedMoviesRouter.get('/:userId/likedMovies',getUserLikedMoviesFromDB)
+likedMoviesRouter.get('/likedMovies',getUserLikedMoviesFromDB)
 
 likedMoviesRouter.get('/info', getUserInfo)
 

@@ -6,12 +6,15 @@ import styles from './MovieDetailsCss.module.css'
 import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai'
 import {AiOutlineHeart, AiFillHeart,} from 'react-icons/ai'
 import {BiCheck} from 'react-icons/bi'
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import Notification from "../../../Components/Notification/Notification"
+import Loading from "../../../Components/Loading/Loading"
 
-const MovieDetail = (props) => {
+const MovieDetail = () => {
 
-    const { movieId } = props
+    const {state} = useLocation()
+
+    const { movieId } = state
 
     const navigate = useNavigate()
 
@@ -37,14 +40,15 @@ const MovieDetail = (props) => {
             movieId: movieId
         })
         .then(async (data) => {
+            console.log(data)
                 let resp = data.data
                 let movie = resp.movieDetails[0]
 
                 let userEnrolledMovies = resp.personalInfo.subscribedMovies
                 let userLikedMovies = resp.personalInfo.likedMovies
-
-                setIsMovieEnrolled( userEnrolledMovies.includes(`${movie.id}`) ? true : false )
-                setIsMovieLiked( userLikedMovies.includes(`${movie.id}`) ? true : false )
+ 
+                userEnrolledMovies && setIsMovieEnrolled( userEnrolledMovies.includes(`${movie.id}`) ? true : false )
+                setIsMovieLiked( userLikedMovies.includes(movie.id) ? true : false )
 
                 let alltrailers = movie.videos.results.filter((video) => video.type == 'Trailer')
                 let likeTrailers = movie.videos.results.filter((video) => video.type != 'Trailer')
@@ -62,6 +66,8 @@ const MovieDetail = (props) => {
         
 
     }, [])
+
+    
 
     
 
@@ -107,11 +113,11 @@ const MovieDetail = (props) => {
 
     if (!movieDetails || ! currentVideoLink) {
         return (
-            <h1>Loading</h1>
+            <Loading></Loading>
         )
     }
     return (
-        <div className={["", styles.allPageContainer].join(' ')} >
+        <div className={["pt-10", styles.allPageContainer].join(' ')} >
 
             <div className={["w-screen ", styles.movieContainer].join('')}>
                 {currentVideoLink != undefined && <ReactPlayer url={`https://www.youtube.com/watch?v=${currentVideoLink}`} pip={true} width='100%' height='100%' playing={true} muted={true} controls={false} className={styles.reactPlayer} />}

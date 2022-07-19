@@ -3,7 +3,8 @@ const {
     getMovies,
     addMovie,
     updateMovie,
-    deleteMovie
+    deleteMovie,
+    findMovie
 } = require('../../controllers/admin/manageMoviesController.js')
 const Router = require('express').Router;
  
@@ -16,6 +17,9 @@ moviesRouter.get('/:id', getMovie);
 // GET request for a list of all movies
 moviesRouter.get('/', getMovies);
 
+
+moviesRouter.post('/search', findMovie)
+
 // POST request to add a movie
 moviesRouter.post('/add', addMovie);
 
@@ -23,6 +27,6 @@ moviesRouter.post('/add', addMovie);
 moviesRouter.put('/:id/update', updateMovie);
 
 // DELETE request to delete a movie
-moviesRouter.delete('/:id/delete', deleteMovie);
+moviesRouter.post('/delete', deleteMovie);
 
 module.exports = moviesRouter;

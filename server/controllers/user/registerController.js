@@ -46,7 +46,7 @@ const getUserInfo = async (req, res, next) => {
 
 const payments = async (req, res, next) => {
   let currentUserId = req.cookies.uuid
-
+  console.log(req.session[currentUserId])
  let userInfo = req.session[currentUserId]
 
     if(userInfo == undefined){

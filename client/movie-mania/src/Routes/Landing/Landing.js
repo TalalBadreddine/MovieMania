@@ -4,9 +4,9 @@ import SignIn from "../../Components/SignInComponents/SignIn";
 import { Outlet } from "react-router-dom";
 
 const Landing = () => {
-    const [leftDivClass, setLeftDivClass] = useState("w-auto hidden h-1/2 mt-28")
-    const [middleDivClass, setMiddleDivClass] = useState("w-1/2  mx-auto titleContainer my-64")
-    const [rightDivClass, setRightDivClass] = useState("w-96  hidden mt-28")
+    const [leftDivClass, setLeftDivClass] = useState("w-auto hidden h-1/2 mt-7")
+    const [middleDivClass, setMiddleDivClass] = useState("w-1/2 h-1/2 m-auto titleContainer ")
+    const [rightDivClass, setRightDivClass] = useState("w-96  hidden mt-7")
 
     const handleGetStarted = (e) => {
         e.preventDefault()
@@ -31,15 +31,15 @@ const Landing = () => {
 
                 <div className={middleDivClass}>
 
-                    <h1 className="text-8xl font-mono font-bold w-screen">Movie Mania</h1>
+                    <h1 className="text-8xl ml-10 font-mono font-bold w-screen">Movie Mania</h1>
 
                     <br />
 
-                    <p className="text-xl text-left font-mono mb-16"> Unlimited movies, TV shows,and more.Watch anywhere. Cancel anytime.</p>
+                    <p className="text-xl text-center font-mono mb-8"> Unlimited movies, TV shows,and more.Watch anywhere. Cancel anytime.</p>
 
                     <div className="w-full getStartedButtonDivClass">
 
-                        <button className="font-mono py-2 px-4 rounded-full mt-10 getStartedButton w-1/2 h-20 text-2xl" onClick={handleGetStarted}>Get Started</button>
+                        <button className="font-mono py-2 px-4 rounded-full getStartedButton w-1/2 h-20 text-2xl" onClick={handleGetStarted}>Get Started</button>
 
                     </div>
 
@@ -57,6 +57,7 @@ const Landing = () => {
                     </p>
                 </div>
             </div>
+            <br /><br /><br /><br />
             <Outlet></Outlet>
         </div>
 
