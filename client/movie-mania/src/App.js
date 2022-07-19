@@ -5,6 +5,7 @@ import React,{useEffect} from 'react'
 import Loading from './Components/Loading/Loading';
 import jwt_decode from 'jwt-decode'
 import axios from 'axios';
+import requests from './Request';
 
 const LazyAdminNavBar = React.lazy(() => import('./Components/AdminNavBar/AdminNavBar'))
 const LazySuccess = React.lazy(() => import('./Components/Success/Success'))
@@ -18,6 +19,8 @@ const LazyMovieDetails = React.lazy(() => import('./Routes/User/MovieDetails/Mov
 const LazyUserNavbar = React.lazy(() => import('./Components/UserNavbar/UserNavbar'))
 const LazyUserHome = React.lazy(() => import('./Routes/User/UserHome/Home'))
 const LazyMyMovies = React.lazy(() => import('./Routes/User/MyMovies/MyMovies')) 
+const LazyUserNews = React.lazy(() => import('./Routes/User/UserNews/UserNews'))
+const LazyUserProfile = React.lazy(() => import('./Routes/User/UserProfile/UserProfile'))
 
 function App() {
 
@@ -96,6 +99,10 @@ function App() {
               <Route path='movieDetails' element = {<LazyMovieDetails movieId='979163' key={'testing'} />} />
 
               <Route path='myMovies' element = {<LazyMyMovies />} />
+
+              <Route path='news' element = {<LazyUserNews  fetchURL={requests.requestUpcoming}/>}/>
+
+              <Route path='profile' element = {<LazyUserProfile />} />
 
 
 

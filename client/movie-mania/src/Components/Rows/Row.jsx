@@ -4,16 +4,16 @@ import Movies from '../Movie/Movies';
 import {AiOutlineDown, AiOutlineUp} from 'react-icons/ai'
 
 
-const Row = ({ title, moviesArr}) => {
+const Row = ({ title, moviesArr, fetchURL}) => {
   const [movies, setMovies] = useState(moviesArr);
   const [seeMore, setSeeMore] = useState(title == 'All Movies')
   const [showMorePressed, setShowMorePressed] = useState(false)
 
-  // useEffect(() => {
-  //   axios.get(fetchURL).then((response) => {
-  //     setMovies(response.data.results.slice(0, 6));
-  //   });
-  // }, [fetchURL]);
+  useEffect(() => {
+    axios.get(fetchURL).then((response) => {
+      setMovies(response.data.results.slice(0, 6));
+    });
+  }, [fetchURL]);
 
 
   return (
