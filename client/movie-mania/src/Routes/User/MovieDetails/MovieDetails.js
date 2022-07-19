@@ -119,7 +119,7 @@ const MovieDetail = () => {
     return (
         <div className={["pt-10", styles.allPageContainer].join(' ')} >
 
-            <div className={["w-screen ", styles.movieContainer].join('')}>
+            <div className={["w-full ", styles.movieContainer].join('')}>
                 {currentVideoLink != undefined && <ReactPlayer url={`https://www.youtube.com/watch?v=${currentVideoLink}`} pip={true} width='100%' height='100%' playing={true} muted={true} controls={false} className={styles.reactPlayer} />}
             </div>
 
