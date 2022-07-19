@@ -7,6 +7,7 @@ import jwt_decode from 'jwt-decode'
 import axios from 'axios';
 import requests from './Request';
 
+
 const LazyAdminNavBar = React.lazy(() => import('./Components/AdminNavBar/AdminNavBar'))
 const LazySuccess = React.lazy(() => import('./Components/Success/Success'))
 const LazyAdminMovies = React.lazy(() => import('./Routes/Admin/AdminMovies/AdminMovies'))
@@ -21,6 +22,7 @@ const LazyUserHome = React.lazy(() => import('./Routes/User/UserHome/Home'))
 const LazyMyMovies = React.lazy(() => import('./Routes/User/MyMovies/MyMovies')) 
 const LazyUserNews = React.lazy(() => import('./Routes/User/UserNews/UserNews'))
 const LazyUserProfile = React.lazy(() => import('./Routes/User/UserProfile/UserProfile'))
+const LazyDetails =  React.lazy(() => import ('./Routes/Admin/AdminUsers/Details'))
 
 function App() {
 
@@ -85,6 +87,8 @@ function App() {
                 <Route path='dashboard' element={<LazyAdminDashboard/>} />
 
                 <Route path='users' element={<LazyAdminUsers/>} />
+
+                <Route  path="editUser" element={<LazyDetails />} />
 
                 <Route path='movies' element={ <LazyAdminMovies /> } />
                 
