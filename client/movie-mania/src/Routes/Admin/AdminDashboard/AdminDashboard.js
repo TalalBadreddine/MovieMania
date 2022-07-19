@@ -263,7 +263,7 @@ function AdminDashboard(req, res) {
                             </div>
 
                             <div className='text-center mt-24'>
-                                <h1 className='text-2xl hover:font-bold hover:cursor-pointer' onClick={() => window.open('https://dashboard.stripe.com/test/payments')}>Check All Payments</h1>
+                                <h1 className='text-2xl  hover:cursor-pointer' onClick={() => window.open('https://dashboard.stripe.com/test/payments')}>Check All Payments</h1>
                             </div>
 
                         </div>

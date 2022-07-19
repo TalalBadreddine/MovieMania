@@ -8,7 +8,6 @@ import {AiOutlineInfoCircle} from 'react-icons/ai'
 import { useNavigate } from 'react-router-dom';
 
 const Main = (props) => {
-    // const [movies, setMovies] = useState(props.movies);
     const navigate = useNavigate()
     const [movie, setMovie] = useState(props.movie);
 
