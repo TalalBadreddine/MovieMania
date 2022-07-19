@@ -5,7 +5,7 @@ const {
     likeMovieById,
     subscribeToMovieById,
     getMovieById,
-    getAllSubscribedMovies
+    getAllSubscribedMovies,
 
  } = require('../../controllers/user/getMoviesController.js')
 

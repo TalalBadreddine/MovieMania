@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 // const movieModel = require('../../models/moviesSchema.js')
 const moviesSchema = require('../../models/movieSchema.js');
+const axios = require('axios')
 
 
 
@@ -84,19 +85,13 @@ const getMovies = async (req, res) => {
 
 // POST request to add a movie
 const addMovie = async (req, res) => {
-        // console.log(req.body);
-        const moviesAdded = new moviesSchema({
 
-         title: req.body.title,
-      
-        poster_path: req.body.posterPath,
-
-        genres: [{name: req.body.genres}]
-            })
+        const moviesAdded = new moviesSchema(req.body.movie)
     try{
-        const newAddMovie = await moviesAdded.save()
-        res.json (newAddMovie)
-        console.log('Movie ADDED!')
+        await moviesAdded.save()
+
+        res.send('added')
+ 
 
     } catch(error){
         res.send("Error" + error)
@@ -165,17 +160,39 @@ const updateMovie = async (req, res) => {
 
 //END ANOTHER METHOD TO UPDATE MOVIE
 
+const findMovie = async (req, res) => {
+    try{
+        const movieTitle = req.body.movieTitle
+        let movieTitleForUrl = movieTitle.replace(' ', '+')
+        console.log(movieTitleForUrl)
+        await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=3115dc5e5611d2448a02e22f57725fdf&query=${movieTitleForUrl}`,{
+            params: {
+                append_to_response: "videos"
+             }
+        })
+        .then((data) =>{
+            res.send(data.data)
+        })
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
+
  
     
 
 // DELETE request to delete a movie
 const deleteMovie = async (req, res) => {
     try{
-        const deleteMovie = await moviesSchema.findById(req.params.id)
+        console.log(req.body.objectId)
+        const deleteMovie = await moviesSchema.find({
+            poster_path: req.body.posterPath})
+        console.log(deleteMovie)
         // moviesDelete.title = req.body.title
-        const newDeleteMovie = await deleteMovie.remove()
-        res.json(newDeleteMovie);
-        console.log("Movie DELETED !")
+       await deleteMovie[0].remove()
+        
+       res.send('deleted')
 
 // ANOTHER METHOD TO DELETE MOVIE
 
@@ -194,5 +211,6 @@ module.exports = {
     getMovies,
     addMovie,
     updateMovie,
-    deleteMovie
+    deleteMovie,
+    findMovie
 }
